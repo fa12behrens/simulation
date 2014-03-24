@@ -310,13 +310,18 @@ function cash(powerCostsPerUnit)
 //Random Generator constructor
 function RNG()
 {
+	var minRange;
+	var maxRange;
+	var randomNumber;
+
 	this.generate = function(minRange,maxRange)
 	{
-		//make random number from min to max as range
-		return this.RNG;
+		this.maxRange=maxRange;
+		this.minRange=minRange;
+		this.randomNumber=Math.floor((Math.random()*this.maxRange)+this.minRange);
+		return this.randomNumber;
 	}
-}
-
+}	
 
 
 //construct everything
@@ -399,5 +404,6 @@ function construct()
 
 	//construct RNG object
 	RNG=new RNG();
+	RNG.generate(1,10);
 
 }
