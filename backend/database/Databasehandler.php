@@ -59,5 +59,7 @@ class Databasehandler
 	}
 }
 
-$go = new Databasehandler();
-$go->execute();
+# just a alpha version, i think it will changed often in our development progress
+# you need to chnage your mysql password in phpmyadmin and in xampp/phpmyadmin/config.inc.php
+#$go = new Databasehandler();
+#$go->execute();
