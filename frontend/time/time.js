@@ -1,3 +1,0 @@
-function getCurrentDate(){}
-
-function getCurrentTime(){}
