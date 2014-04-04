@@ -1,0 +1,6 @@
+
+We use PHPMYADMIN all queries would be shown after the changes.
+
+Just copy and past ur sql queries into .sql files with useful names.
+
+Versions, every versions have their own required queries, which must be import in PHPMYADMIN.

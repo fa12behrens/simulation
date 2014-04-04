@@ -1,0 +1,29 @@
+hierarchy [site <- component <- part <- job <- base <- source]
+		  |		  Frontend		   |
+Attention you must need this hierarchy, as example site can use source and job can use base,
+but part can't use component, I think it's self-explanatory.
+Best way is to call the next smaller unit (example: site call component), source is a exception.
+
+As you can see, our frontend has 3 folders too.
+
+- part
+
+Parts are the smallest unit for frontend,
+they are used to fill up the components.
+Parts are build up with jobs and of course source.
+As example it can be a toolbar which is called by the component toolbox.
+
+- component
+
+The components are the basicly the biggest part.
+They called a whole part of the side,
+which can do jobs and display source, or just implement
+a number of parts.
+As example toolbox is called by the sidebuilder tool.
+
+- site
+
+Contains 2 files, one of them is the index,
+the index is usually called by loading the application.
+He simply calls the sitebuilder, which build the complete
+backbone for the site and calls the components.

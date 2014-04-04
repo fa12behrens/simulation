@@ -1,0 +1,53 @@
+hierarchy [site <- component <- part <- job <- base <- source]
+										|	   Backend		 |
+Attention you must need this hierarchy, as example site can use source and job can use base,
+but part can't use component, I think it's self-explanatory.
+Best way is to call the next smaller unit (example: site call component), source is a exception.
+
+As you can see, our backend has 3 folders.
+
+- source
+
+In this folders are located 2 files,
+one for html and one for js.
+These files are php files, which own functions with html/javascript as echo.
+WUT!?
+Each function can be used to create a specific part of html/js.
+You can use it, if you include it on your file and call the function,
+you will see that they need parameters, which must give by calling it.
+That means, all files we had are php files!
+It's very friendly to use, because we have just one language and can easily
+do everything with it.
+
+as example:
+i want a div with text
+
+$html = new html();
+$html->div_start('example_class','example_id');
+$html->text('dat text');
+$html->div_end();
+
+this code create a div container with a example class and a example id,
+and the text in this div is dat text.
+
+You might be noticed that div must be close and text not,
+but this is very logical, see text only needs his text,
+we can't do anything more with it,
+but div just need his class and id, his value can be variable,
+so we can give him as example some text and if we step to the next div,
+we must close the current div before.
+
+Same with javascript!
+
+If you have more questions, look at these sources and you might be now whats going on.
+
+- base
+
+The basic functions are the tiniest real php functions,
+like session_start, it can be used everywhere and it don't need to be changed,
+all whats bigger then a basic function, so all what do more then one or two actions expect database is a job.
+
+- job
+
+Jobs are functions which do a numbger of actions to do their job. They can use basic functions
+to reduce duplicated code.

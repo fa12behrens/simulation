@@ -1,0 +1,12 @@
+You should not pass without this standards.
+
+
+- a file should never have more than 300 lines!
+- a function should never have more than 50 lines!
+- a line should never have more than 120 lines!
+- use the hierarchy of the current system!
+- document all code, with docblocks!
+- if you update one thing, update all stuff which is in relation with it (like related code, doc and issues in git).
+- variables, functions, filenames and classes must be seperate with underscore (example_class)
+- strings are nexed like this "string $variable <br> 'just strings' string string", strings,html,text -> "" just text -> ''
+- code should be well indent

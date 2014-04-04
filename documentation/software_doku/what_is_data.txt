@@ -1,0 +1,16 @@
+Data is a folder with most different subfolders.
+
+You can found:
+
+-css->main.css (all costume css parts are located in this file, all other comes from libraries)
+-framework (current empty)
+-image (contains all images used in the application)
+-js->main.js (current empty, the js part is still located in backend)
+-library (Much libraries are included for Bootstrap, Jquery, Jquery_Ui and Jscrollpane)
+-sound (if we need sound it would be located here)
+-xml (current empty, should contain all needed xml files)
+
+If you want to add something,
+please check if it fit in this folder!
+
+The common reason to enter data is to add css code.

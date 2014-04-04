@@ -1,0 +1,2 @@
+var earnings;
+var expenses;
