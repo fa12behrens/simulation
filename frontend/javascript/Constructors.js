@@ -1,3 +1,50 @@
+//the constructor for the communication object
+function socket_grid(grid_height,grid_width) {
+
+	this.grid_height = grid_height;
+	this.grid_width = grid_width;
+	var canvas_grid = new Array();
+
+	this.set_array = function(array) {
+		canvas_grid= array;
+	}
+
+	this.get_array = function() {
+		return canvas_grid;
+	}
+
+	this.get_grid_height = function() {
+		return grid_height;
+	}
+
+	this.get_grid_width = function() {
+		return grid_width;
+	}
+}
+
+//constructor for the object which uses the canvas methods and references the preloaded images
+function visualization(engine) {
+
+	this.engine = engine;
+
+//reference to the images and make an array of references to call them
+	var pictures = new Array();
+	pictures[0] = document.getElementById("cook_image");
+	pictures[1] = document.getElementById("waiter_image");
+	pictures[2] = document.getElementById("customer_image");
+	pictures[3] = document.getElementById("door_image");
+	pictures[4] = document.getElementById("field_image");
+	pictures[5] = document.getElementById("kitchen_image");
+	pictures[6] = document.getElementById("table_image");
+	pictures[7] = document.getElementById("wall_image");
+	pictures[8] = document.getElementById("storage_image");
+
+//drawing the single objects
+	this.draw_image = function(imageNumber,xPosition,yPosition) {
+		this.engine.drawImage(pictures[imageNumber],xPosition,yPosition);
+	}
+}
+
 // room constructor
 function room(id,size)
 {
