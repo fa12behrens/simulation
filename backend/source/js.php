@@ -1,11 +1,11 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: T.Behrens
  * Date: 11.12.13
  * Time: 10:14
  */
-
 class js
 {
 
@@ -66,8 +66,9 @@ $( '$drag' ).draggable({
 		";
 	}
 
-	public function scrollpane($scroll){
-		echo"
+	public function scrollpane($scroll)
+	{
+		echo "
 		<script>
 			$(document).ready(function(){
 			$(function()
@@ -79,8 +80,9 @@ $( '$drag' ).draggable({
 		";
 	}
 
-	public function accordion($select){
-		echo"
+	public function accordion($select)
+	{
+		echo "
 		<script>
 		$(document).ready(function(){
 		$( '$select' ).accordion();
@@ -89,8 +91,9 @@ $( '$drag' ).draggable({
 		";
 	}
 
-	public function tab($select){
-		echo"
+	public function tab($select)
+	{
+		echo "
 		<script>
 		$(document).ready(function(){
 		$( '$select' ).tabs();
@@ -99,30 +102,29 @@ $( '$drag' ).draggable({
 		";
 	}
 
-	public function ajax($clicked, $datei, $input, $output){
-		echo"
+	public function ajax($clicked, $datei, $input, $refresh)
+	{
+		echo "
 		<script type='text/javascript'>
-		$(document).ready(function(){
-		$('$clicked').click(function(){
-		var name = encodeURI($('$input').val());
-		if(name == ''){
-		//alert('Bitte einen Namen angeben!');
-		}else{
-		//alert(name);
-		$.ajax({
-		type: 'POST',
-		async: true,
-		url: '../part/$datei.php',
-		data: 'name='+name,
-		success: function(data){
-		var json = $.parseJSON(data);
-		$('$output').html(json.hello+'<br />your ip: '+json.ip);
-		}
-		});
-		}
-		});
-		});
+	$(document).ready(function () {
+					$('$clicked').click(function () {
+						var name = encodeURI($('#$input').val());
+						if (name == '') {
+							//alert('Bitte einen Namen angeben!');
+						} else {
+							//alert(name);
+							$.post('$datei.php',
+								{
+									name: name
+								},
+								function (data, status) {
+								//alert('Data: ' + name);
+								});
+							$('.refresh').load(window.location.pathname+' .refresh');
+						}
+					});
+				});
 		</script>
 		";
 	}
-} 
+}

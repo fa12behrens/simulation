@@ -18,7 +18,7 @@ class header
 		$js = new js();
 
 		$html->div('col-md-12', '121');
-		$html->h('1','WG Manager');
+		$html->h('1','Restaurant Simulation');
 		$html->div_end();
 	}
 }

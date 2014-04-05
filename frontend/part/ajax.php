@@ -9,25 +9,30 @@
 require_once('../../backend/source/html.php');
 require_once('../../backend/source/js.php');
 
-class ajax {
+class ajax
+{
 
-	public function handle(){
+	public function handle()
+	{
 
 		$html = new html();
 		$js = new js();
-		$js->ajax('#ajax','ajax','#input','#output');
-		$html->input('btn btn-default','ajax','submit','NAME');
-		$html->input('','input','text','NAME');
-		$html->div('','output');
+		$js->ajax('#ajax', 'index', '#input', 'refresh');
+		$html->input('btn btn-default', 'index', 'submit', 'NAME');
+		$html->input('', 'input', 'text', 'NAME');
+		$html->div('', 'output');
 		$html->div_end();
-
-		if(!empty($_POST['name'])){
-			$ret = Array("hello" => "Hallo ".$_POST['name'], "ip" => $_SERVER['REMOTE_ADDR'] );
-			echo"win";
-			echo json_encode($ret);
+		echo '<div class="refresh">';
+		if (!empty($_POST['name'])) {
+			$ret = $_POST['name'];
+			$handle = fopen("file.txt", "w+");
+			fwrite($handle, $ret);
+			fclose($handle);
+		} else {
+			echo "fail";
+			$d = new DateTime();
+			echo $d->format('i');
 		}
-		else{
-			echo"fail";
-		}
+		echo '</div>';
 	}
 }
