@@ -17,40 +17,71 @@
 
 //create the socket for the communication between logic and the visual object
 //height and width defines how many fields the graphic has and the logic will use these attributes to make calculations for position or pathfinding
-				socket_grid = new socket_grid(20,20);
+				socket_grid = new socket_grid();
 			}
 		}
 
+/*
+		function call_grid_logic() {
+
+			grid = new Array();
+
+			grid = [[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]];
+
+			return grid;
+		}
+*/
+
+
+		function call_grid_logic() {
+
+			grid = new Array();
+
+//comlete grid random, have fun
+
+            grid = [[Math.floor((Math.random()*8)+1) ,Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1)],[Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1)],[Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1)],[Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1)],[Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1)],[Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1)],[Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1)],[Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1)],[Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1)],[Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1)],[Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1)],[Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1)],[Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1)],[Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1)],[Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1)],[Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),],[Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1)],[Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),2,Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1)],[Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1)],[Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1),Math.floor((Math.random()*8)+1)]];
+
+			return grid;
+		}
+
+
+
+
+		function handle_canvas_grid() {
+
+			var max_x = socket_grid.get_grid_width();
+			var max_y = socket_grid.get_grid_height();
+			var canvas_array = new Array();
+			canvas_array = socket_grid.get_array();
+
+			for (var current_width = 0; current_width < max_x; current_width++) {
+				
+				for (var current_height = 0; current_height < max_y; current_height++) {
+					
+					current_x = current_width * 25;
+					current_y = current_height * 25;
+
+					visual.draw_image(canvas_array[current_width][current_height],current_x,current_y);
+
+				};
+			};
+		}
 
 //MAIN function for canvas
 		function draw_visualization() {
 
 				construct_canvas_objects();
-
-// usage example
-				var x = 0;
-				var y = 0;
-				var max_y = socket_grid.get_grid_height();
-				var max_x = socket_grid.get_grid_width();				
-
-					for (var i = 0; i < max_y; i++) {
-											
-						visual.draw_image(i,x,y);
-						x = x + 50;
-						y = y + (25 * i);
-					};
-			
+				socket_grid.set_array(call_grid_logic());
+				handle_canvas_grid();
 		}
 
 //the constructor for the communication object
-		function socket_grid(grid_height,grid_width) {
+		function socket_grid() {
 
-			this.grid_height = grid_height;
-			this.grid_width = grid_width;
 			var canvas_grid = new Array();
 
 			this.set_array = function(array) {
-				canvas_grid= array;
+				canvas_grid = array;
 			}
 
 			this.get_array = function() {
@@ -58,11 +89,11 @@
 			}
 
 			this.get_grid_height = function() {
-				return grid_height;
+				return canvas_grid[0].length;
 			}
 
 			this.get_grid_width = function() {
-				return grid_width;
+				return canvas_grid.length;
 			}
 		}
 
@@ -72,15 +103,17 @@
 
 //reference to the images and make an array of references to call them
 			var pictures = new Array();
-			pictures[0] = document.getElementById("cook_image");
-			pictures[1] = document.getElementById("waiter_image");
-			pictures[2] = document.getElementById("customer_image");
-			pictures[3] = document.getElementById("door_image");
-			pictures[4] = document.getElementById("field_image");
+
+			pictures[0] = document.getElementById("field_image");
+			pictures[1] = document.getElementById("wall_image");
+			pictures[2] = document.getElementById("door_image");
+			pictures[3] = document.getElementById("customer_image");
+			pictures[4] = document.getElementById("cook_image");
 			pictures[5] = document.getElementById("kitchen_image");
 			pictures[6] = document.getElementById("table_image");
-			pictures[7] = document.getElementById("wall_image");
+			pictures[7] = document.getElementById("waiter_image");
 			pictures[8] = document.getElementById("storage_image");
+
 
 //drawing the single objects
 			this.draw_image = function(imageNumber,xPosition,yPosition) {
