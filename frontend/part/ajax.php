@@ -17,7 +17,7 @@ class ajax
 
 		$html = new html();
 		$js = new js();
-		$js->ajax('#ajax', 'index', '#input', 'refresh');
+		$js->ajax('#ajax', 'index_old', '#input', 'refresh');
 		$html->input('btn btn-default', 'index', 'submit', 'NAME');
 		$html->input('', 'input', 'text', 'NAME');
 		$html->div('', 'output');

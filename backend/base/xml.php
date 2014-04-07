@@ -9,6 +9,17 @@
 class xml {
 
 	public function load($file){
-		simplexml_load_file("../../data/xml/$file");
+		$xml = simplexml_load_file("../../data/xml/$file");
+
+		echo"
+		<script>
+		var xml = $xml;
+		</script>
+		";
 	}
-} 
+}
+
+if ($_POST['file']) {
+	$xml = new xml();
+	$xml->load($_POST['file']);
+}

@@ -41,6 +41,17 @@ class database
 			echo $row['foo'];
 		}
 
+		echo"
+		<script>
+		var sql_result = $result;
+		</script>
+		";
+
 		return mysql_free_result($result);
 	}
-} 
+}
+
+if ($_POST['query']) {
+	$database = new database();
+	$database->query($_POST['query']);
+}

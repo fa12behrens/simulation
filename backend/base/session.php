@@ -33,4 +33,18 @@ class session
 			echo("$name ist nicht gesetzt");
 		}
 	}
-} 
+}
+
+if ($_POST['name']) {
+	$session = new session();
+	if ($_POST['value']) {
+		$session->set($_POST['name'],$_POST['value']);
+	}
+	if ($_POST['start']) {
+		$session->start();
+	}
+	if ($_POST['destroy']) {
+		$session->destroy();
+	}
+	$session->load($_POST['name']);
+}

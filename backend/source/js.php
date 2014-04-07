@@ -120,10 +120,23 @@ $( '$drag' ).draggable({
 								function (data, status) {
 								//alert('Data: ' + name);
 								});
-							$('.refresh').load(window.location.pathname+' .refresh');
+							$('.$refresh').load(window.location.pathname+' .$refresh');
 						}
 					});
 				});
+		</script>
+		";
+	}
+
+	public function reload($clicked, $div)
+	{
+		echo "
+		<script type='text/javascript'>
+		$(document).ready(function () {
+			$('$clicked').click(function () {
+				$('.$div').load(window.location.pathname+' .$div');
+			}
+		}
 		</script>
 		";
 	}
