@@ -13,7 +13,10 @@
 
 //create the visualization and engine objects
 				var engine = canvas.getContext("2d");
-				visual = new visualization(engine);
+				var picture_width = 25;
+				var picture_height = 25;
+
+				visual = new visualization(engine,picture_height,picture_width);
 
 //create the socket for the communication between logic and the visual object
 //height and width defines how many fields the graphic has and the logic will use these attributes to make calculations for position or pathfinding
@@ -51,6 +54,9 @@
 
 			var max_x = socket_grid.get_grid_width();
 			var max_y = socket_grid.get_grid_height();
+			var picture_height = visual.get_picture_height();
+			var picture_width = visual.get_picture_width();
+
 			var canvas_array = new Array();
 			canvas_array = socket_grid.get_array();
 
@@ -58,8 +64,8 @@
 				
 				for (var current_height = 0; current_height < max_y; current_height++) {
 					
-					current_x = current_width * 25;
-					current_y = current_height * 25;
+					current_x = current_width * picture_width;
+					current_y = current_height * picture_height;
 
 					visual.draw_image(canvas_array[current_width][current_height],current_x,current_y);
 
@@ -97,9 +103,11 @@
 			}
 		}
 
-		function visualization(engine) {
+		function visualization(engine,picture_height,picture_width) {
 
 			this.engine = engine;
+			this.picture_height = picture_height;
+			this.picture_width = picture_width;
 
 //reference to the images and make an array of references to call them
 			var pictures = new Array();
@@ -117,7 +125,15 @@
 
 //drawing the single objects
 			this.draw_image = function(imageNumber,xPosition,yPosition) {
-				this.engine.drawImage(pictures[imageNumber],xPosition,yPosition);
+				this.engine.drawImage(pictures[imageNumber],xPosition,yPosition,picture_height,picture_width);
+			}
+
+			this.get_picture_height = function() {
+				return picture_height;
+			}
+
+			this.get_picture_width = function() {
+				return picture_width;
 			}
 		}
 
