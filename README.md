@@ -1,277 +1,144 @@
-# angular-seed — the seed for AngularJS apps
+This project use the angular-seed project as start up and is based on the angularjs framework.
+
+Our whole code is included in the app folder,
+devided by several folders:
+
+- css / contains the css files
+- img / contains jpeg and png files
+- json / contains json files
+- js / contains scripte(js) files
+- partials / contains html files
+- php / contains php files
+- index.html / no folder ...
+
+I think this is self-explanatory,
+but the app folder isn't our only folder,
+we need also complementary folders and files,
+to keep the project running:
+
+- bower_components / contains frameworks and libraries
+- node_modules and test / folders for our unit tests and our point to point testing, not sure if we use this.
+- sql_schema / contains our sql files
+- documentation / contains project and software documentation
+- old / contains old js files, removed soon
+- and above some npm/node files
+
+Now we know what is in here,
+next step is to deal and work with it.
+
+At first you will need to download this from git
+into your local file system:
+
+This following text describe how u can use git (ignore if u know git!).
+
+You already joined git and our repository, otherwise you won't read this.
+
+How to use the website: You are already on the main page of git,
+so i am starting from here. Over this Readme.md should be a block which shows all project content,
+if u looked at this you can see folder names, the last commit message and the date of the last commit.
+You can navigate through this while click the folder,
+for step into the folder or click the commit message to view the last commit.
+Above you can see the last commit and his author. Above this you can see a navigation with commits,
+branches, releases and contributors + number. Above this you have your personal bar, with path,search,logout etc..
+At the right side u can see some links and download stuff.
+Links are just a few usefull like issues for bugtracking etc.,
+pull request if you want to move your branch back into the master and the Wiki,
+the wiki should contain the software_doku and more, but today it's empty.
+
+How to clone it on my PC: Before you see the download stuff, but if you don't know how to use,
+just copy the HTTPS url (should be https://github.com/fa12behrens/wg_project.git or some similar) from the textfield.
+If you don't install git before, you should do it now! (http://git-scm.com/downloads) If you are done,
+you can use 3 ways to clone stuff
+
+use git gui->clone project and paste the url into source, also enter ure target directory
+use git bash->navigate to the target path and enter (git clone url)->(git clone https://github.com/fa12behrens/wg_project.git)
+use your IDE to clone from VCS GIT, the process is similar to git gui but it's direct in your IDE,
+if it is. Now you have your repository local, but you can't even update or commit it,
+to fix it u need to open git bash->navigate to your project and enter (git branch --set-upstream master origin/master)or
+(git branch --set-upstream-to origin/master)is newer Oh, wait u can't navigate in git bash? Damn,
+its with (cd /drive/folder/folder/) as example (cd /d/projects/wg_project) like unix. So now you can work with the code.
+
+Now you got it.
+
+I try to explain it very well but if you have open questions you can look at angularjs api for more information.
+-> https://docs.angularjs.org/api
+
+As you can see, there is an .exe file in our project,
+this is our manager for server and bower emulation.
+
+To use it you must step into your own project folder with git bash
+and do npm install to install new bower components etc. or start to start the server.
+
+Because these server don't work with php, we use xampp apache for it,
+also we can use phpmyadmin / mysql with this.
+
+To control which components should be installed,
+you can edit the bower.json:
+
+ "dependencies": {
+ //contains frameworks and libraries like bootstrap or angularjs
+ 	"angular": "1.2.x",
+ 	"angular-route": "1.2.x",
+ 	"angular-loader": "1.2.x",
+ 	"angular-mocks": "~1.2.15",
+ 	"angular-animate": "~1.2.15",
+ 	"angular-resource": "~1.2.15",
+ 	"jquery": "1.10.2",
+ 	"jquery-ui": "~1.10.3",
+ 	"bootstrap": "~3.1.1"
+ // our current components as example
+ }
+
+ Now you can add components and run the server.
+
+ I skip the other folders and jump directly to the app folder.
+
+ Css, img and json are clear!?
+
+ Php is used as interface between database/files and javascript,
+ each php file is listening to post requests and save the return value
+ into a json file or return it to the js file which called it.
+
+ Partials are html files which includes parts of the whole site,
+ it is showing up in the index.html with help from angular.
+
+ The index.html contains the main parts from html and includes all
+ external files.
+
+ Attention: you can use the angular framework,
+ to do stuff in html directly.
+1.
+ ng-"one of many attributes" in or as an html tag like:
+ <input type="submit" ... ng-click="myScopeFunction()">
+ this example run a function which is declared in js and saved into a scope object.
+2.
+ Logical operations can be done in {{"here"}} like:
+ {{3 + 4}}
+ {{myScopeVariable}}
+
+ For more informations, pls watch the angular api i noticed before
+ or search the angular site
+ -> https://angularjs.org/
+ if the api don't help you, there are two options you can search there,
+ develop or learn, if you step into it you maybe find what you need.
+
+ At least JS,
+ we have app.js here, it appears in our index, like app.css and is the core js file.
+ Here we create or BOSS module called simulationApp, which must be included in the index.
+ We say which other js parts should been added and can manage routing
+ and other stuff in simulationApp.config.
+
+ The controller can use scopes, interface from html to js and is the big brother
+ from service, both are designed to perform complex actions that should not be directly in the app.
+ Controllers use services like a function use an abstract function to avoid double code and long files.
+
+ Directives can be used to implement jquery functions or similar
+ into our app, notice is use angular style and you can't just use the jquery syntax.
+ Css use angular style to but normal css still working so, yeah :D,
+ use what you want.
+
+ Filters can filter the information which should be shown,
+ simple filters can be build without it directly into html files.
+
+ This was our readme, for more questions send us, or me a message.
 
-This project is an application skeleton for a typical [AngularJS](http://angularjs.org/) web app.
-You can use it to quickly bootstrap your angular webapp projects and dev environment for these
-projects.
-
-The seed contains a sample AngularJS application and is preconfigured to install the Angular
-framework and a bunch of development and testing tools for instant web development gratification.
-
-The seed app doesn't do much, just shows how to wire two controllers and views together.
-
-
-## Getting Started
-
-To get you started you can simply clone the angular-seed repository and install the dependencies:
-
-### Clone angular-seed
-
-Clone the angular-seed repository using [git][git]:
-
-```
-git clone https://github.com/angular/angular-seed.git
-cd angular-seed
-```
-
-### Install Dependencies
-
-We have two kinds of dependencies in this project: tools and angular framework code.  The tools help
-us manage and test the application.
-
-* We get the tools we depend upon via `npm`, the [node package manager][npm].
-* We get the angular code via `bower`, a [client-side code package manager][bower].
-
-We have preconfigured `npm` to automatically run `bower` so we can simply do:
-
-```
-npm install
-```
-
-Behind the scenes this will also call `bower install`.  You should find that you have two new
-folders in your project.
-
-* `node_modules` - contains the npm packages for the tools we need
-* `bower_components` - contains the angular framework files
-
-### Run the Application
-
-We have preconfigured the project with a simple development web server.  The simplest way to start
-this server is:
-
-```
-npm start
-```
-
-Now browse to the app at `http://localhost:8000/app/index.html`.
-
-
-
-## Directory Layout
-
-    app/                --> all of the files to be used in production
-      css/              --> css files
-        app.css         --> default stylesheet
-      img/              --> image files
-      index.html        --> app layout file (the main html template file of the app)
-      index-async.html  --> just like index.html, but loads js files asynchronously
-      js/               --> javascript files
-        app.js          --> application
-        controllers.js  --> application controllers
-        directives.js   --> application directives
-        filters.js      --> custom angular filters
-        services.js     --> custom angular services
-      partials/             --> angular view partials (partial html templates)
-        partial1.html
-        partial2.html
-
-    test/               --> test config and source files
-      protractor-conf.js    --> config file for running e2e tests with Protractor
-      e2e/                  --> end-to-end specs
-        scenarios.js
-      karma.conf.js         --> config file for running unit tests with Karma
-      unit/                 --> unit level specs/tests
-        controllersSpec.js      --> specs for controllers
-        directivessSpec.js      --> specs for directives
-        filtersSpec.js          --> specs for filters
-        servicesSpec.js         --> specs for services
-
-
-## Testing
-
-There are two kinds of tests in the angular-seed application: Unit tests and End to End tests.
-
-### Running Unit Tests
-
-The angular-seed app comes preconfigured with unit tests. These are written in
-[Jasmine][jasmine], which we run with the [Karma Test Runner][karma]. We provide a Karma
-configuration file to run them.
-
-* the configuration is found at `test/karma.conf.js`
-* the unit tests are found in `test/unit/`.
-
-The easiest way to run the unit tests is to use the supplied npm script:
-
-```
-npm test
-```
-
-This script will start the Karma test runner to execute the unit tests. Moreover, Karma will sit and
-watch the source and test files for changes and then re-run the tests whenever any of them change.
-This is the recommended strategy; if you unit tests are being run every time you save a file then
-you receive instant feedback on any changes that break the expected code functionality.
-
-You can also ask Karma to do a single run of the tests and then exit.  This is useful if you want to
-check that a particular version of the code is operating as expected.  The project contains a
-predefined script to do this:
-
-```
-npm run test-single-run
-```
-
-
-### End to end testing
-
-The angular-seed app comes with end-to-end tests, again written in [Jasmine][jasmine]. These tests
-are run with the [Protractor][protractor] End-to-End test runner.  It uses native events and has
-special features for Angular applications.
-
-* the configuration is found at `test/protractor-conf.js`
-* the end-to-end tests are found in `test/e2e/`
-
-Protractor simulates interaction with our web app and verifies that the application responds
-correctly. Therefore, our web server needs to be serving up the application, so that Protractor
-can interact with it.
-
-```
-npm start
-```
-
-In addition, since Protractor is built upon WebDriver we need to install this.  The angular-seed
-project comes with a predefined script to do this:
-
-```
-npm run update-webdriver
-```
-
-This will download and install the latest version of the stand-alone WebDriver tool.
-
-Once you have ensured that the development web server hosting our application is up and running
-and WebDriver is updated, you can run the end-to-end tests using the supplied npm script:
-
-```
-npm run protractor
-```
-
-This script will execute the end-to-end tests against the application being hosted on the
-development server.
-
-
-## Updating Angular
-
-Previously we recommended that you merge in changes to angular-seed into your own fork of the project.
-Now that the angular framework library code and tools are acquired through package managers (npm and
-bower) you can use these tools instead to update the dependencies.
-
-You can update the tool dependencies by running:
-
-```
-npm update
-```
-
-This will find the latest versions that match the version ranges specified in the `package.json` file.
-
-You can update the Angular dependencies by running:
-
-```
-bower update
-```
-
-This will find the latest versions that match the version ranges specified in the `bower.json` file.
-
-
-## Loading Angular Asynchronously
-
-The angular-seed project supports loading the framework and application scripts asynchronously.  The
-special `index-async.html` is designed to support this style of loading.  For it to work you must
-inject a piece of Angular JavaScript into the HTML page.  The project has a predefined script to help
-do this.
-
-```
-npm run update-index-async
-```
-
-This will copy the contents of the `angular-loader.js` library file into the `index-async.html` page.
-You can run this every time you update the version of Angular that you are using.
-
-
-## Serving the Application Files
-
-While angular is client-side-only technology and it's possible to create angular webapps that
-don't require a backend server at all, we recommend serving the project files using a local
-webserver during development to avoid issues with security restrictions (sandbox) in browsers. The
-sandbox implementation varies between browsers, but quite often prevents things like cookies, xhr,
-etc to function properly when an html page is opened via `file://` scheme instead of `http://`.
-
-
-### Running the App during Development
-
-The angular-seed project comes preconfigured with a local development webserver.  It is a node.js
-tool called [http-server][http-server].  You can start this webserver with `npm start` but you may choose to
-install the tool globally:
-
-```
-sudo npm install -g http-server
-```
-
-Then you can start your own development web server to server static files, from a folder, by
-running:
-
-```
-http-server
-```
-
-Alternatively, you can choose to configure your own webserver, such as apache or nginx. Just
-configure your server to serve the files under the `app/` directory.
-
-
-### Running the App in Production
-
-This really depends on how complex is your app and the overall infrastructure of your system, but
-the general rule is that all you need in production are all the files under the `app/` directory.
-Everything else should be omitted.
-
-Angular apps are really just a bunch of static html, css and js files that just need to be hosted
-somewhere, where they can be accessed by browsers.
-
-If your Angular app is talking to the backend server via xhr or other means, you need to figure
-out what is the best way to host the static files to comply with the same origin policy if
-applicable. Usually this is done by hosting the files by the backend server or through
-reverse-proxying the backend server(s) and webserver(s).
-
-
-## Continuous Integration
-
-### Travis CI
-
-[Travis CI][travis] is a continuous integration service, which can monitor GitHub for new commits
-to your repository and execute scripts such as building the app or running tests. The angular-seed
-project contains a Travis configuration file, `.travis.yml`, which will cause Travis to run your
-tests when you push to GitHub.
-
-You will need to enable the integration between Travis and GitHub. See the Travis website for more
-instruction on how to do this.
-
-### CloudBees
-
-CloudBees have provided a CI/deployment setup:
-
-<a href="https://grandcentral.cloudbees.com/?CB_clickstart=https://raw.github.com/CloudBees-community/angular-js-clickstart/master/clickstart.json">
-<img src="https://d3ko533tu1ozfq.cloudfront.net/clickstart/deployInstantly.png"/></a>
-
-If you run this, you will get a cloned version of this repo to start working on in a private git repo,
-along with a CI service (in Jenkins) hosted that will run unit and end to end tests in both Firefox and Chrome.
-
-
-## Contact
-
-For more information on AngularJS please check out http://angularjs.org/
-
-[git]: http://git-scm.com/
-[bower]: http://bower.io
-[npm]: https://www.npmjs.org/
-[node]: http://nodejs.org
-[protractor]: https://github.com/angular/protractor
-[jasmine]: http://pivotal.github.com/jasmine/
-[karma]: http://karma-runner.github.io
-[travis]: https://travis-ci.org/
-[http-server]: https://github.com/nodeapps/http-server

@@ -10,3 +10,6 @@ You should not pass without this standards.
 - variables, functions, filenames and classes must be seperate with underscore (example_class)
 - strings are nexed like this "string $variable <br> 'just strings' string string", strings,html,text -> "" just text -> ''
 - code should be well indent
+
+
+NEW: In address, that we use ~pure js this are just guidlines like the pirate codex!

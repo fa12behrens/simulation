@@ -1,4 +1,6 @@
 
+NEW: Attention we use json with our new framework and do just a couple of actions in mysql now.
+
 We use PHPMYADMIN all queries would be shown after the changes.
 
 Just copy and past ur sql queries into .sql files with useful names.

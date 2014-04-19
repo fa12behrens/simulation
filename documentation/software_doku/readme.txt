@@ -7,6 +7,7 @@ too late i already cut it. ;D
 So you need some skills to continue,
 let us check it:
 
+- angularjs skills (new)
 - php skills
 - html skills
 - css skills
@@ -21,9 +22,6 @@ let us check it:
 
 The documentation parts are divided in following:
 
-- coding rules/standards
-- how to use backend
-- how to use frontend
-- what is in data what can or should I add?
-- what the fuck should i do with sql_schema
-- I don't make a documentation for the documentation
+readme.md / one from us and one from angularjs
+coding_standards
+what_sql_schema
