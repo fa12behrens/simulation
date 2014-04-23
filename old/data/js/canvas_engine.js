@@ -9,6 +9,7 @@ function construct_canvas_objects() {
 }
 
 
+// obsolete, only for example
 	 function call_grid_logic() {
 
 	 grid = new Array();
