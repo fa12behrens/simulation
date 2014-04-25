@@ -1,40 +1,40 @@
 /* app css stylesheet */
 
 .menu {
-  list-style: none;
-  border-bottom: 0.1em solid black;
-  margin-bottom: 2em;
-  padding: 0 0 0.5em;
+	list-style: none;
+	border-bottom: 0.1em solid black;
+	margin-bottom: 2em;
+	padding: 0 0 0.5em;
 }
 
 .menu:before {
-  content: "[";
+	content: "[";
 }
 
 .menu:after {
-  content: "]";
+	content: "]";
 }
 
 .menu > li {
-  display: inline;
+	display: inline;
 }
 
 .menu > li:before {
-  content: "|";
-  padding-right: 0.3em;
+	content: "|";
+	padding-right: 0.3em;
 }
 
 .menu > li:nth-child(1):before {
-  content: "";
-  padding: 0;
+	content: "";
+	padding: 0;
 }
 
-body{
+body {
 	/*
 	background: #111111 url(../../bower_components/jquery-ui/themes/dot-luv/images/ui-bg_gloss-wave_20_111111_500x100.png) 50% top repeat-x;
 	background: #111111 url(../../bower_components/jquery-ui/themes/dot-luv/images/ui-bg_dots-small_20_333333_2x2.png);
 	*/
-	background: url(../img/green.jpg);
+	background: url(../img/bg/bgb.PNG);
 }
 
 .btn {
@@ -42,12 +42,13 @@ body{
 }
 
 .container {
-	margin-top: 5px;
+	margin-top: 10px;
 	position: relative;
-	background: #00498f url(../../bower_components/jquery-ui/themes/dot-luv/images/ui-bg_diagonals-thick_15_0b3e6f_40x40.png);
-	opacity: 0.7;
+	background: #00498f url(../img/bg/bgg.PNG);
+	opacity: 0.9;
 	border-radius: 20px;
-	color: #f5f5f5;
+	color: #000000;
+	box-shadow: 2px 2px 4px 4px #000000;
 }
 
 .item {
@@ -96,12 +97,15 @@ body{
 }
 
 .acco {
-	height: 150px;
-}
-.tab {
-	height: 500px;
+	height: 250px;
 }
 
-.special{
-	background: #111111 url(../../bower_components/jquery-ui/themes/dot-luv/images/ui-bg_flat_40_292929_40x100.png);
+.tab {
+	min-height: 500px;
+	max-height: 625px;
+	overflow: scroll;
+}
+
+.special {
+	background: #ffffff;
 }

@@ -1,7 +1,7 @@
 <div ng-controller="CashController">
 
 	<input ng-model="data" id='input' type='text' name='insertCash'>
-	<input ng-click="set()" class='btn btn-default' id='ajax' type='submit' name='submitCash'>
+	<input ng-click="setCash()" class='btn btn-default' id='ajax' type='submit' name='submitCash'>
 	<li>{{clicked}}</li>
 	<br>
 	<li ng-repeat="cash in cashlist">{{cash}}</li>

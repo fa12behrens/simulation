@@ -14,5 +14,10 @@ simulationApp.config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/view2', {templateUrl: 'partials/partial2.html', controller: 'MyCtrl2'});
   $routeProvider.when('/view3', {templateUrl: 'partials/partial3.html', controller: 'MyCtrl2'});
   $routeProvider.when('/view4', {templateUrl: 'partials/partial4.html', controller: 'MyCtrl2'});
+  $routeProvider.when('/view5', {templateUrl: 'partials/partial5.html', controller: 'RngController'});
+  $routeProvider.when('/view6', {templateUrl: 'partials/partial6.html', controller: 'TimeController'});
+  $routeProvider.when('/view7', {templateUrl: 'partials/partial7.html', controller: 'CanvasController'});
+  $routeProvider.when('/view8', {templateUrl: 'partials/partial8.html', controller: 'TestDbController'});
+  $routeProvider.when('/view9', {templateUrl: 'partials/partial9.html', controller: 'MyCtrl2'});
   $routeProvider.otherwise({redirectTo: '/view1'});
 }]);

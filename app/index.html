@@ -5,19 +5,159 @@
 	<title>My AngularJS App</title>
 	<link rel="stylesheet" href="css/app.css"/>
 	<link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css"/>
-	<link rel="stylesheet" href="../bower_components/jquery-ui/themes/dot-luv/jquery-ui.css"/>
+	<link rel="stylesheet" href="../bower_components/jquery-ui/themes/start/jquery-ui.css"/>
 </head>
 <body>
-<ul class="menu">
-	<li><a href="#/view1">view1</a></li>
-	<li><a href="#/view2">view2</a></li>
-	<li><a href="#/view3">view3</a></li>
-	<li><a href="#/view4">view4</a></li>
-</ul>
 
-<div ng-view></div>
+<div class='container' id='1'>
 
-<div>Angular seed app: v<span app-version></span></div>
+	<div class='row' id='11'>
+
+	</div>
+
+	<div class='row special' id='12'>
+
+		<div class='col-md-12' id='121'>
+
+			<h1>Restaurant Simulation</h1>
+
+		</div>
+
+	</div>
+
+	<div class='row' id='13'>
+
+	</div>
+
+	<div class='row main' id='14'>
+
+		<div class='col-md-3' id='141'>
+
+			<script>
+
+			</script>
+
+			<div class='accordion' id='accordion' data-hbo-accordion>
+
+				<h3>Testing Links</h3>
+
+				<div class='acco' id='stock'>
+
+					<ul class="menu">
+						<li><a href="#/view1">view1</a></li>
+						<li><a href="#/view2">view2</a></li>
+						<li><a href="#/view3">view3</a></li>
+						<!--<li><a href="#/view4">view4</a></li>-->
+						<li><a href="#/view5">view5</a></li>
+						<li><a href="#/view6">view6</a></li>
+						<li><a href="#/view7">view7</a></li>
+						<li><a href="#/view8">view8</a></li>
+						<li><a href="#/view9">view9</a></li>
+					</ul>
+
+				</div>
+
+				<h3>Testing Images</h3>
+
+				<div class='acco' id='calendar'>
+
+					<img src='img/white.png' class='img-thumbnail' alt='Jinx' height='90px' width='60px'>
+
+					awesome text
+
+				</div>
+
+				<h3>Testing Filters</h3>
+
+				<div class='acco' id='todo'>
+
+					<img src='img/red.png' class='img-thumbnail' alt='Jinx' height='90px' width='60px'>
+
+					awesome text
+
+				</div>
+
+				<h3>Testing Information</h3>
+
+				<div class='acco' id='master'>
+
+					<img src='img/abstergo.png' class='img-thumbnail' alt='Jinx' height='90px' width='60px'>
+
+					awesome text is so awesome, that we neeed a scrollplane to display it.
+					awesome text is so awesome, that we neeed a scrollplane to display it.
+					awesome text is so awesome, that we neeed a scrollplane to display it.
+				</div>
+
+			</div>
+
+		</div>
+
+		<div class='col-md-9' id='143'>
+
+			<div class='tab' id='tab' data-hbo-tabs>
+
+				<ul class=''>
+
+					<li class=''>
+
+						<a href='#overview' class=''>
+
+							<span class=''>Main View</span>
+
+						</a>
+
+					</li>
+
+					<li class=''>
+
+						<a href='#options' class=''>
+
+							<span class='' id=''>Options</span>
+
+						</a>
+
+					</li>
+
+				</ul>
+
+				<div class='' id='overview'>
+
+					<div ng-view></div>
+
+				</div>
+
+				<div class='' id='options'>
+
+					change your options
+
+				</div>
+
+				<!--<h1>Hier kommt der Simulator rein!</h1>-->
+			</div>
+
+		</div>
+
+	</div>
+
+	<div class='row' id='15'>
+
+	</div>
+
+	<div class='row special' id='16'>
+
+		<div class='col-md-10' id='163'>
+
+			Angular seed app: v<span app-version></span>
+
+		</div>
+
+	</div>
+
+	<div class='row' id='17'>
+
+	</div>
+
+</div>
 
 <!-- In production use:
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
