@@ -36,5 +36,4 @@ class cash
 
 		return $this->sql;
 	}
-
 }
