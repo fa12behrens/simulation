@@ -97,7 +97,7 @@ simulationApp.service('HumanService', [
 			// remove human by id
 		};
 		this.calculateMoralThought = function () {
-			// choose one of the defined 1-10 morales/thoughts by waiting / recive cold food / get stressed / boring
+			// choose one of the defined 1-10 morales/thoughts by waiting / receive cold food / get stressed / boring
 		};
 	}
 ]);
