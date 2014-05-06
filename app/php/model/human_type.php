@@ -16,6 +16,11 @@ class human_type {
 				$this->sql = "SELECT * FROM `human_type` ht
 				INNER JOIN `human` h ON h.human_type_id = ht.id";
 				break;
+			case 'loadByType':
+				$this->sql = "SELECT * FROM `human_type` ht
+				INNER JOIN `human` h ON h.human_type_id = ht.id
+				WHERE ht.id = $data";
+				break;
 			default:
 				$this->sql = "SELECT * FROM `human_type` ht
 				INNER JOIN `human` h ON h.human_type_id = ht.id";

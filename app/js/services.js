@@ -69,32 +69,36 @@ simulationApp.service('TimeService', [
 	}
 ]);
 
-simulationApp.service('HumanService', [
-	function () {
-		var id;
-		var name;
+simulationApp.service('HumanService', ['DatabaseService', 'JsonService',
+	function (DatabaseService, JsonService) {
 		var movement;
 		var action;
-		var gender;
 		var morale;
 		var thoughts;
-		var human_type;
 
-		this.createHumanType = function (type) {
-			this.type = type;
-			// save human type into db or json
+		this.getFromHumanType = function (human_type_id) {
+			DatabaseService.loadByType("human_type", human_type_id);
+			JsonService.load("human_type").then(function (data) {
+				var humans_by_type = data.data;
+				console.log(humans_by_type);
+				return humans_by_type;
+
+			});
 		};
-		this.createHuman = function (name, gender, human_type) {
-			this.name = name;
-			this.gender = gender;
-			this.human_type = human_type;
-			// save human into db or json
+		this.createHuman = function (name, gender, human_type_id) {
+			var value = [name, gender, human_type_id];
+			DatabaseService.save("human", value);
 		};
-		this.getHuman = function (id) {
-			// get human by id
+		this.getHumans = function () {
+			DatabaseService.load("human");
+			JsonService.load("human").then(function (data) {
+				var humans = data.data;
+				console.log(humans);
+				return humans;
+			});
 		};
 		this.killHuman = function (id) {
-			// remove human by id
+			DatabaseService.delete("human", id);
 		};
 		this.calculateMoralThought = function () {
 			// choose one of the defined 1-10 morales/thoughts by waiting / receive cold food / get stressed / boring
@@ -102,14 +106,108 @@ simulationApp.service('HumanService', [
 	}
 ]);
 
+simulationApp.service('WaiterService', ['ChefService', 'CustomerService',
+	function (ChefService, CustomerService) {
+		var order;
+		var product;
+
+		this.pickOrder = function (new_order) {
+			var ordered = CustomerService.getOrdered()
+			if (ordered === null) {
+				order = CustomerService.takeOrder();
+			}
+		};
+		this.placeOrder = function () {
+			ChefService.setOrder(order);
+			order = null;
+		};
+		this.pickProduct = function () {
+			product = ChefService.takeProduct();
+		};
+		this.placeProduct = function (new_product) {
+			// todo: cash buchen
+			var ordered = CustomerService.getOrdered;
+			var temp_order = CustomerService.getOrder;
+			if (ordered === true && temp_order == product) {
+				CustomerService.eat(product);
+				product = null;
+			}
+		};
+
+		this.getOrder = function () {
+			return order;
+		}
+
+		this.getProduct = function () {
+			return product;
+		}
+	}]);
+
+simulationApp.service('ChefService', [
+	function () {
+		var products = [];
+		var orders = [];
+
+		this.cook = function () {
+			for (var i = 0; i < orders.length; i++) {
+				products[i] = orders[i];
+				// todo: product in die datenbank schreiben
+				array.splice(orders, i);
+			}
+			// Todo: Ressourcen löschen
+		}
+
+		this.setOrder = function (order) {
+			orders.push(order);
+		}
+
+		this.takeProduct = function () {
+			for (var i = 0; i < products.length; i++) {
+				var temp_product = products[i];
+				array.splice(products, i);
+				return temp_product;
+			}
+			return false;
+		}
+	}]);
+
+simulationApp.service('StoremanService', [
+	function () {
+		this.buyResources = function () {
+			// Todo füge resources in der datenbank hinzu und ziehe die cash kosten ab
+		}
+	}]);
+
+simulationApp.service('CustomerService', [
+	function () {
+		var order;
+		var ordered = null;
+
+		this.generateOrder = function () {
+			// TODO: erstelle eine zufällige order
+		};
+
+		this.takeOrder = function () {
+			ordered = true;
+			return order;
+		};
+
+		this.getOrdered = function () {
+			return ordered;
+		};
+
+		this.getOrder = function () {
+			return order;
+		};
+
+		this.eat = function ($product) {
+			// todo: check product oder so
+			ordered = false;
+		}
+	}]);
+
 simulationApp.service('ResourceService', [
 	function () {
-		var id;
-		var type;
-		var amount;
-		var purchase_price;
-		var durability;
-		var resource_type;
 
 		this.createResource = function (type, purchase_price) {
 			this.type = type;
@@ -136,24 +234,11 @@ simulationApp.service('ResourceService', [
 
 simulationApp.service('ProductService', [
 	function () {
-		var id;
-		var type;
-		var ingredients;
-		var price;
-		var time_to_cold;
-		var product_type;
-		var creation_time;
 
 		this.researchProduct = function (type, ingredients, time_to_cold, price) {
-			this.type = type;
-			this.ingredients = ingredients;
-			this.time_to_cold = time_to_cold;
-			this.price = price;
 			// save Product into db or json
 		};
 		this.createProduct = function (product_type, creation_time) {
-			this.product_type = product_type;
-			this.creation_time = creation_time;
 			// save Resource into db or json;
 		};
 		this.consumeProduct = function (id) {
@@ -181,14 +266,46 @@ simulationApp.service('DatabaseService', [ '$http',
 			});
 			// saves the result into a json file
 		};
+		this.loadByType = function (table_name, table_type) {
+			var type = "loadByType";
+			$(document).ready(function () {
+				$.post('php/databaseHandler.php',
+					{
+						table_name: table_name,
+						data: table_type,
+						type: type
+					},
+					function (data, status) {
+						//alert('Data: ' + data);
+					});
+			});
+			// saves the result into a json file
+		};
+		this.delete = function (table_name, id) {
+			var type = "delete";
+			$(document).ready(function () {
+				$.post('php/databaseHandler.php',
+					{
+						table_name: table_name,
+						data: id,
+						type: type
+					},
+					function (data, status) {
+						//alert('Data: ' + data);
+					});
+			});
+		};
 		this.save = function (table_name, data) {
 			var type = "create";
+			console.log(data);
+			var enc_data = JSON.stringify(data);
+			console.log(enc_data);
 			$(document).ready(function () {
 				$.post('php/databaseHandler.php',
 					{
 						table_name: table_name,
 						type: type,
-						data: data
+						data: enc_data
 					},
 					function (data, status) {
 						//alert('Data: ' + data);
@@ -201,8 +318,9 @@ simulationApp.service('DatabaseService', [ '$http',
 simulationApp.service('JsonService', [ '$http',
 	function ($http) {
 		this.load = function (file) {
-			file = 'json/'+ file +'.json';
+			file = 'json/' + file + '.json';
 			return $http.get(file).success(function (data) {
+				console.log(file, data);
 				return  data;
 			});
 		};

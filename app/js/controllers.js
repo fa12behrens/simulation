@@ -77,8 +77,55 @@ simulationApp.controller('TestDbController', ['$scope', 'DatabaseService', 'Json
 	});
 }]);
 
-simulationApp.controller('HumanController', [function () {
+simulationApp.controller('HumanController', ['$scope', 'HumanService', function ($scope, HumanService) {
+	//HumanService.createHuman("Caitlyn", "female", "1");
+	//HumanService.getHumans();
+	HumanService.getFromHumanType(1);
+	//HumanService.killHuman(11);
+}]);
 
+simulationApp.controller('WaiterController', ['$scope', 'HumanService', 'WaiterService', function ($scope, HumanService, WaiterService) {
+	$scope.pick = function(){
+		WaiterService.pickOrder($scope.order);
+		//WaiterService.placeOrder();
+		WaiterService.pickProduct($scope.product);
+		//WaiterService.placeProduct();
+		$scope.holding_order = WaiterService.getOrder();
+		$scope.holding_product = WaiterService.getProduct();
+	};
+	$scope.place = function(){
+		//WaiterService.pickOrder($scope.order);
+		WaiterService.placeOrder();
+		//WaiterService.pickProduct($scope.product);
+		WaiterService.placeProduct();
+		$scope.holding_order = WaiterService.getOrder();
+		$scope.holding_product = WaiterService.getProduct();
+	};
+	//HumanService.createHuman("Caitlyn", "female", "1");
+	//HumanService.getHumans();
+	//HumanService.getFromHumanType(1);
+	//HumanService.killHuman(11);
+}]);
+
+simulationApp.controller('ChefController', ['$scope', 'HumanService', function ($scope, HumanService) {
+	//HumanService.createHuman("Caitlyn", "female", "1");
+	//HumanService.getHumans();
+	HumanService.getFromHumanType(2);
+	//HumanService.killHuman(11);
+}]);
+
+simulationApp.controller('StoremanController', ['$scope', 'HumanService', function ($scope, HumanService) {
+	//HumanService.createHuman("Caitlyn", "female", "1");
+	//HumanService.getHumans();
+	HumanService.getFromHumanType(3);
+	//HumanService.killHuman(11);
+}]);
+
+simulationApp.controller('CustomernController', ['$scope', 'HumanService', function ($scope, HumanService) {
+	//HumanService.createHuman("Caitlyn", "female", "1");
+	//HumanService.getHumans();
+	HumanService.getFromHumanType(4);
+	//HumanService.killHuman(11);
 }]);
 
 simulationApp.controller('MyCtrl2', [function () {

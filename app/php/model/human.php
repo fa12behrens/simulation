@@ -19,24 +19,24 @@ class human
 				INNER JOIN `human_type` ht ON h.human_type_id = ht.id";
 				break;
 			case 'create':
-				$name = $data['name'];
-				$gender = $data['gender'];
-				$human_type_id = $data['human_type_id'];
+				$name = $data[0];
+				$gender = $data[1];
+				$human_type_id = $data[2];
 				if ($data !== null) {
 					$this->sql = "INSERT INTO  `simulator`.`human` (
 								`id`,
 								`name`,
 								`gender`,
-								`human_type_id` ,
+								`human_type_id`
 								)
 								VALUES (
-								NULL ,  $name, $gender, $human_type_id)";
+								NULL ,  '$name', '$gender', $human_type_id)";
 				}
 				break;
 			case 'delete':
-				$id = $data['id'];
-				$this->sql = "DELETE FROM `human` h
-				WHERE h.id = $id";
+				$id = $data;
+				$this->sql = "DELETE FROM `human`
+				WHERE id = $id";
 				break;
 			case 'truncate':
 				$this->sql = "TRUNCATE `human`";
