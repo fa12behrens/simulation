@@ -1,6 +1,7 @@
 'use strict';
 
 /* Filters */
+// Nothing change here, at the moment.
 
 var simulationApp = angular.module('simulationApp.filters', []);
 

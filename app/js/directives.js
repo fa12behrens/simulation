@@ -9,7 +9,8 @@ simulationApp.directive('appVersion', ['version', function (version) {
 			elm.text(version);
 		};
 	}])
-
+	// Todo: Fehlermeldung beheben
+	// directives activate the accordion and the tab component from jquery-ui
 	.directive('hboAccordion', function () {
 		return {
 			restrict: 'A',
@@ -29,16 +30,17 @@ simulationApp.directive('appVersion', ['version', function (version) {
 	});
 
 
+// jquery command for refresh on div
 /*
-$(document).ready(function () {
-	$('#ajax').click(function () {
-		var name = encodeURI($('#input').val());
-		if (name == '') {
-			//alert('Bitte einen Namen angeben!');
-		} else {
-			//alert(name);
-			$('.refresh').load(window.location.pathname + ' .refresh');
-		}
-	});
-});
-*/
+ $(document).ready(function () {
+ $('#ajax').click(function () {
+ var name = encodeURI($('#input').val());
+ if (name == '') {
+ //alert('Bitte einen Namen angeben!');
+ } else {
+ //alert(name);
+ $('.refresh').load(window.location.pathname + ' .refresh');
+ }
+ });
+ });
+ */

@@ -109,12 +109,12 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `simulator`.`order` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `product_type_id` INT NOT NULL,
+  `order_product_type_id` INT NOT NULL,
   `ordered` BIT,
   PRIMARY KEY (`id`),
- INDEX `fk_order_product_type_idx` (`product_type_id` ASC),
+ INDEX `fk_order_product_type_idx` (`order_product_type_id` ASC),
   CONSTRAINT `fk_order_product_type`
-    FOREIGN KEY (`product_type_id`)
+    FOREIGN KEY (`order_product_type_id`)
     REFERENCES `simulator`.`product_type` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)

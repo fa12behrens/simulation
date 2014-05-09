@@ -85,7 +85,7 @@ simulationApp.controller('HumanController', ['$scope', 'HumanService', function 
 }]);
 
 simulationApp.controller('WaiterController', ['$scope', 'HumanService', 'WaiterService', function ($scope, HumanService, WaiterService) {
-	$scope.pick = function(){
+	$scope.pick = function () {
 		WaiterService.pickOrder($scope.order);
 		//WaiterService.placeOrder();
 		WaiterService.pickProduct($scope.product);
@@ -93,7 +93,7 @@ simulationApp.controller('WaiterController', ['$scope', 'HumanService', 'WaiterS
 		$scope.holding_order = WaiterService.getOrder();
 		$scope.holding_product = WaiterService.getProduct();
 	};
-	$scope.place = function(){
+	$scope.place = function () {
 		//WaiterService.pickOrder($scope.order);
 		WaiterService.placeOrder();
 		//WaiterService.pickProduct($scope.product);
@@ -107,25 +107,11 @@ simulationApp.controller('WaiterController', ['$scope', 'HumanService', 'WaiterS
 	//HumanService.killHuman(11);
 }]);
 
-simulationApp.controller('ChefController', ['$scope', 'HumanService', function ($scope, HumanService) {
-	//HumanService.createHuman("Caitlyn", "female", "1");
-	//HumanService.getHumans();
-	HumanService.getFromHumanType(2);
-	//HumanService.killHuman(11);
-}]);
-
-simulationApp.controller('StoremanController', ['$scope', 'HumanService', function ($scope, HumanService) {
-	//HumanService.createHuman("Caitlyn", "female", "1");
-	//HumanService.getHumans();
-	HumanService.getFromHumanType(3);
-	//HumanService.killHuman(11);
-}]);
-
-simulationApp.controller('CustomernController', ['$scope', 'HumanService', function ($scope, HumanService) {
-	//HumanService.createHuman("Caitlyn", "female", "1");
-	//HumanService.getHumans();
-	HumanService.getFromHumanType(4);
-	//HumanService.killHuman(11);
+// This controller starts the Simulator each round.
+simulationApp.controller('RoundController', ['$scope', 'PrepareService', function ($scope, PrepareService) {
+	$scope.start = function () {
+		PrepareService.execute(1,2);
+	}
 }]);
 
 simulationApp.controller('MyCtrl2', [function () {

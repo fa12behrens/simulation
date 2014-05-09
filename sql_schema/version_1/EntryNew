@@ -1,0 +1,106 @@
+-- -----------------------------------------------------
+-- Table `simulator`.`human_type`
+-- -----------------------------------------------------
+INSERT INTO  `simulator`.`human_type` (
+`id` ,
+`type`
+)
+VALUES (
+NULL ,  'Waiter'
+), (
+NULL ,  'Customer'
+), (
+NULL ,  'Chef'
+), (
+NULL ,  'Storeman'
+);
+
+-- -----------------------------------------------------
+-- Table `simulator`.`human`
+-- -----------------------------------------------------
+INSERT INTO  `simulator`.`human` (
+`id` ,
+`name` ,
+`gender` ,
+`human_type_id`
+)
+VALUES (
+NULL ,  'Droggelbecher',  'male',  '1'
+), (
+NULL ,  'EvilKenivel',  'male',  '2'
+), (
+NULL ,  'Alice',  'female',  '3'
+), (
+NULL ,  'GandalfBengston',  'male',  '4'
+);
+
+-- -----------------------------------------------------
+-- Table `simulator`.`product_type`
+-- -----------------------------------------------------
+INSERT INTO  `simulator`.`product_type` (
+`id` ,
+`type` ,
+`ingredients` ,
+`time_to_cold` ,
+`price`
+)
+VALUES (
+NULL ,  'Spaghetti',  'nudeln',  '00:10:00',  '10'
+), (
+NULL ,  'Steak',  'fleisch',  '00:05:00',  '15'
+);
+
+-- -----------------------------------------------------
+-- Table `simulator`.`product`
+-- -----------------------------------------------------
+INSERT INTO  `simulator`.`product` (
+`id` ,
+`creation_time` ,
+`product_type_id`
+)
+VALUES (
+NULL ,
+CURRENT_TIMESTAMP ,  '1'
+), (
+NULL ,
+CURRENT_TIMESTAMP ,  '2'
+);
+
+-- -----------------------------------------------------
+-- Table `simulator`.`order`
+-- -----------------------------------------------------
+INSERT INTO  `simulator`.`order` (
+`id` ,
+`order_product_type_id` ,
+`ordered`
+)
+VALUES (
+NULL ,  '1', NULL
+), (
+NULL ,  '2', NULL
+);
+
+-- -----------------------------------------------------
+-- Table `simulator`.`human_has_order`
+-- -----------------------------------------------------
+INSERT INTO  `simulator`.`human_has_order` (
+`human_id` ,
+`order_id`
+)
+VALUES (
+'2',  '1'
+);
+
+-- -----------------------------------------------------
+-- Table `simulator`.`human_has_product`
+-- -----------------------------------------------------
+INSERT INTO  `simulator`.`human_has_product` (
+`human_id` ,
+`product_id`
+)
+VALUES (
+'1',  '1'
+);
+
+
+

@@ -106,71 +106,71 @@ simulationApp.service('HumanService', ['DatabaseService', 'JsonService',
 	}
 ]);
 
-simulationApp.service('WaiterService', ['ChefService', 'CustomerService',
-	function (ChefService, CustomerService) {
-		var order;
-		var product;
-
-		this.pickOrder = function (new_order) {
-			var ordered = CustomerService.getOrdered()
-			if (ordered === null) {
-				order = CustomerService.takeOrder();
+// The waiter is the only human who can call other humans to do something,
+// his relations are bind to chefs and customers, he can also use the DatabaseService.
+// He can pick and place orders and products in cooperation with his relations.
+// This service is supposed to call from CallWaiterService, because of required parameters.
+simulationApp.service('WaiterService', ['ChefService', 'CustomerService', 'DatabaseService',
+	function (ChefService, CustomerService, DatabaseService) {
+		// expect two human data (one waiter and one customer) and just call the customers getOrder function.
+		this.pickOrder = function (waiter, customer) {
+			CustomerService.getOrder(waiter, customer);
+		};
+		// expect three ids (from waiter, chef and order) and just the chefs setOrder function,
+		// also remove the order from current waiter.
+		this.placeOrder = function (waiter_id, chef_id, order_id) {
+			ChefService.setOrder(chef_id, order_id);
+			var data = [waiter_id, order_id];
+			DatabaseService.special('human_has_order', 'delete', data);
+		};
+		// expect two ids (from waiter and chef) and just call the chefs pickProduct function.
+		this.pickProduct = function (waiter_id, chef_id) {
+			ChefService.takeProduct(waiter_id, chef_id);
+		};
+		// expect two human data (one waiter and one customer),
+		// book the price of the sold product and call the customers takeOrder function,
+		// if the current product_type match the order of the customer.
+		this.placeProduct = function (waiter, customer) {
+			if (waiter['product_type_id'] == customer['order_product_type_id']) {
+				DatabaseService.special('cash', 'create', waiter['price']);
+				CustomerService.takeOrder(waiter, customer);
 			}
 		};
-		this.placeOrder = function () {
-			ChefService.setOrder(order);
-			order = null;
-		};
-		this.pickProduct = function () {
-			product = ChefService.takeProduct();
-		};
-		this.placeProduct = function (new_product) {
-			// todo: cash buchen
-			var ordered = CustomerService.getOrdered;
-			var temp_order = CustomerService.getOrder;
-			if (ordered === true && temp_order == product) {
-				CustomerService.eat(product);
-				product = null;
-			}
-		};
-
-		this.getOrder = function () {
-			return order;
-		}
-
-		this.getProduct = function () {
-			return product;
-		}
 	}]);
 
-simulationApp.service('ChefService', [
-	function () {
-		var products = [];
-		var orders = [];
+// The service can accept orders, cook and deliver products,
+// Todo: Komentar
+simulationApp.service('ChefService', [ 'DatabaseService', 'JsonService',
+	function (DatabaseService, JsonService) {
 
 		this.cook = function () {
-			for (var i = 0; i < orders.length; i++) {
-				products[i] = orders[i];
-				// todo: product in die datenbank schreiben
-				array.splice(orders, i);
-			}
-			// Todo: Ressourcen löschen
-		}
+			// Todo: order holen und das product kochen
+			// Todo: order vom koch löschen, product adden und resources löschen
+		};
 
-		this.setOrder = function (order) {
-			orders.push(order);
-		}
+		this.setOrder = function (chef_id, order_id) {
+			var data = [chef_id, order_id];
+			DatabaseService.special('human_has_order', 'create', data);
+		};
 
-		this.takeProduct = function () {
-			for (var i = 0; i < products.length; i++) {
-				var temp_product = products[i];
-				array.splice(products, i);
-				return temp_product;
-			}
-			return false;
+		this.takeProduct = function (waiter_id, chef_id) {
+			var table_name = 'human_has_product';
+			DatabaseService.special(table_name, 'loadOneById', chef_id);
+			setTimeout(function () {
+				JsonService.load(table_name).then(function (data) {
+					var product = data.data;
+					if (product) {
+						data = [product[0]['human_id'], product[0]['product_id']];
+						DatabaseService.special(table_name, 'delete', data);
+						data = [waiter_id, product[0]['product_id']];
+						DatabaseService.special(table_name, 'create', data);
+					}
+				});
+			}, 500);
 		}
 	}]);
 
+// Todo: Kommentar
 simulationApp.service('StoremanService', [
 	function () {
 		this.buyResources = function () {
@@ -178,31 +178,95 @@ simulationApp.service('StoremanService', [
 		}
 	}]);
 
-simulationApp.service('CustomerService', [
-	function () {
-		var order;
-		var ordered = null;
+// Todo: Kommentar
+simulationApp.service('CustomerService', ['DatabaseService',
+	function (DatabaseService) {
 
 		this.generateOrder = function () {
 			// TODO: erstelle eine zufällige order
 		};
 
-		this.takeOrder = function () {
-			ordered = true;
-			return order;
+		this.takeOrder = function (waiter, customer) {
+			var data = [waiter['id'], waiter['product_id']];
+			DatabaseService.special('human_has_product', 'delete', data);
+			data = [customer['order_id'], 0];
+			DatabaseService.special('order', 'update', data);
 		};
 
-		this.getOrdered = function () {
-			return ordered;
+		this.getOrder = function (waiter, customer) {
+			var data = [customer['order_id'], 1];
+			DatabaseService.special('order', 'update', data);
+			data = [waiter['id'], customer['order_id']];
+			DatabaseService.special('human_has_order', 'create', data);
 		};
+	}]);
 
-		this.getOrder = function () {
-			return order;
+// This service is supposed to be called in each round of progress,
+// because it prepare parameter, check conditions and call other services,
+// these services doing all the logic for the simulator except gui components.
+// The PrepareService implement the CallWaiterService, DatabaseService and JsonService.
+simulationApp.service('PrepareService', ['DatabaseService', 'JsonService', 'CallWaiterService',
+	function (DatabaseService, JsonService, CallWaiterService) {
+		var table_name = 'human';
+		var waiter;
+		var human;
+		// Function which load human data by the two ids which are required as parameter and call the CallWaiterService.
+		// It loads the data by using the defined api and  the timeouts tell js to wait for the server.
+		// function expect waiter_id and human_id
+		this.execute = function (waiter_id, human_id) {
+			DatabaseService.loadById(table_name, waiter_id);
+			setTimeout(function () {
+				JsonService.load(table_name).then(function (data) {
+					waiter = data.data;
+				});
+				DatabaseService.loadById(table_name, human_id);
+				setTimeout(function () {
+					JsonService.load(table_name).then(function (data) {
+						human = data.data;
+					});
+					setTimeout(function () {
+						CallWaiterService.execute(waiter[0], human[0]);
+					}, 100);
+				}, 1000);
+			}, 1000);
 		};
+		this.buyResources = function(){
+		// Todo: Hole alle resources
+		// Todo: Entferne abgelaufene resources	?
+		// Todo: Zähle alle resources mit dem selben type zusammen
+		// Todo: Wenn das result kleiner als X soll der Storeman X neue resources des types kaufen,
+		// Todo: also in die DB schreiben und in der db den negativen cash Betrag buchen
+		}
+	}]);
 
-		this.eat = function ($product) {
-			// todo: check product oder so
-			ordered = false;
+// The service call one function from the WaiterService after checking which one can be called.
+simulationApp.service('CallWaiterService', ['WaiterService',
+	function (WaiterService) {
+		this.execute = function (waiter, human) {
+			// If the human is a chef, it will try to give him a order or to pick up a product
+			// by checking if the waiter has an order or already has a product
+			if (human['type'] == 'Chef') {
+				if (waiter['order_id']) {
+					//WaiterService.placeOrder(waiter['id'], human['id'], waiter['order_id']);
+				}
+				if (!waiter['product_id']) {
+					//WaiterService.pickProduct(waiter['id'], human['id']);
+				}
+			}
+			// If the human is a customer, it will try to take a order or to place the product
+			// by checking if the waiter already has an order or has a product
+			else if (human['type'] == 'Customer') {
+				if (human['ordered'] == null && human['ordered'] !== 0) {
+					if (!waiter['order_id']) {
+						//WaiterService.pickOrder(waiter, human);
+					}
+				}
+				else if (human['ordered'] == 1) {
+					if (waiter['product_id']) {
+						//WaiterService.placeProduct(waiter, human);
+					}
+				}
+			}
 		}
 	}]);
 
@@ -264,7 +328,34 @@ simulationApp.service('DatabaseService', [ '$http',
 						//alert('Data: ' + data);
 					});
 			});
-			// saves the result into a json file
+		};
+		this.special = function (table_name, type, data) {
+			var enc_data = JSON.stringify(data);
+			$(document).ready(function () {
+				$.post('php/databaseHandler.php',
+					{
+						table_name: table_name,
+						data: enc_data,
+						type: type
+					},
+					function (data, status) {
+						//alert('Data: ' + data);
+					});
+			});
+		};
+		this.loadById = function (table_name, id) {
+			var type = "loadById";
+			$(document).ready(function () {
+				$.post('php/databaseHandler.php',
+					{
+						table_name: table_name,
+						data: id,
+						type: type
+					},
+					function (data, status) {
+						//alert('Data: ' + data);
+					});
+			});
 		};
 		this.loadByType = function (table_name, table_type) {
 			var type = "loadByType";
@@ -279,7 +370,6 @@ simulationApp.service('DatabaseService', [ '$http',
 						//alert('Data: ' + data);
 					});
 			});
-			// saves the result into a json file
 		};
 		this.delete = function (table_name, id) {
 			var type = "delete";
@@ -297,9 +387,7 @@ simulationApp.service('DatabaseService', [ '$http',
 		};
 		this.save = function (table_name, data) {
 			var type = "create";
-			console.log(data);
 			var enc_data = JSON.stringify(data);
-			console.log(enc_data);
 			$(document).ready(function () {
 				$.post('php/databaseHandler.php',
 					{
@@ -320,7 +408,6 @@ simulationApp.service('JsonService', [ '$http',
 		this.load = function (file) {
 			file = 'json/' + file + '.json';
 			return $http.get(file).success(function (data) {
-				console.log(file, data);
 				return  data;
 			});
 		};

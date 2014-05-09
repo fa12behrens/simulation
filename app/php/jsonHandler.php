@@ -8,7 +8,8 @@
  */
 class jsonHandler
 {
-
+	// This function can be called by js posts,
+	// it will just update json file with the given file in the correct list, based on the required parameters.
 	public function execute($data, $list, $file)
 	{
 		$json = file_get_contents('../json/'.$file.'.json');
@@ -23,6 +24,8 @@ class jsonHandler
 		fclose($handle);
 	}
 
+	// This function is called by the DatabaseHandler and overwrite a json file with the new content,
+	// usual as api between php and js.
 	public function save($data, $file){
 		$handle = fopen('../json/'.$file.'.json', 'w+');
 		$json = json_encode($data);
@@ -31,6 +34,8 @@ class jsonHandler
 	}
 }
 
+// This if query checks, if this file is called with post, if this is true,
+// it will execute a instance from the jsonHandler.
 if (!(empty($_POST['data']) && empty($_POST['data']))) {
 	$handler = new jsonHandler();
 	$handler->execute($_POST['data'], $_POST['list'], $_POST['file']);
