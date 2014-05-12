@@ -109,31 +109,6 @@ simulationApp.service('HumanService', ['DatabaseService', 'JsonService', 'RngSer
 		this.calculateMoralThought = function () {
 			// choose one of the defined 1-10 morales/thoughts by waiting / receive cold food / get stressed / boring
 		};
-		// Function generate a random customer, save him into db and spawn him at the grid spawn point.
-		this.generateCustomer = function () {
-			var names = [
-				['GandalfBengston', 'Christoph', 'Martin'],
-				['Katarina', 'Sara', 'Melissa']
-			];
-			var gender = ['male', 'female'];
-			var human_type_id = 2;
-			var random_gender = gender[RngService.generate(gender.length, 0)];
-			var random_name = 'Undefined';
-			if (random_gender == 'male') {
-				random_name = names[0][RngService.generate(names[0].length, 0)];
-			}
-			else {
-				random_name = names[1][RngService.generate(names[0].length, 0)];
-			}
-			var data = [random_name, random_gender, human_type_id];
-			DatabaseService.special('human', 'create', data);
-			JsonService.load('gui').then(function (data) {
-				var grid = data.data;
-				var spawn_point = [1, 1];
-				grid[spawn_point[0]][spawn_point[1]] = 3;
-				JsonService.overwrite('gui', grid);
-			});
-		};
 	}
 ]);
 
@@ -291,14 +266,68 @@ simulationApp.service('CustomerService', ['DatabaseService', 'JsonService', 'Rng
 			data = [waiter['id'], customer['order_id']];
 			DatabaseService.special('human_has_order', 'create', data);
 		};
-	}]);
+		// Function generate a random customer, save him into db and spawn him at the grid spawn point.
+		this.generateCustomer = function () {
+			var names = [
+				['GandalfBengston', 'Christoph', 'Martin'],
+				['Katarina', 'Sara', 'Melissa']
+			];
+			var gender = ['male', 'female'];
+			var human_type_id = 2;
+			var random_gender = gender[RngService.generate(gender.length, 0)];
+			var random_name = 'Undefined';
+			if (random_gender == 'male') {
+				random_name = names[0][RngService.generate(names[0].length, 0)];
+			}
+			else {
+				random_name = names[1][RngService.generate(names[0].length, 0)];
+			}
+			var data = [random_name, random_gender, human_type_id];
+			DatabaseService.special('human', 'create', data);
+			JsonService.load('gui').then(function (data) {
+				var grid = data.data;
+				var spawn_point = [1, 1];
+				grid[spawn_point[0]][spawn_point[1]] = 3;
+				JsonService.overwrite('gui', grid);
+				JsonService.load('gui_logic').then(function (data) {
+					grid = data.data;
+					DatabaseService.special('human', 'loadLast');
+					setTimeout(function () {
+						JsonService.load('human').then(function (data) {
+							var human_id = data.data[0]['id'];
+							grid[spawn_point[0]][spawn_point[1]] = human_id;
+							JsonService.overwrite('gui_logic', grid);
+						});
+					}, 100);
+				});
+			});
+		};
+		// Remove the entries on the spawn point from grid
+		// and remove the customer from db to.
+		this.removeCustomer = function (customer_id) {
+			var spawn_point = [1, 1];
+			JsonService.load('gui').then(function (data) {
+				var grid = data.data;
+				grid[spawn_point[0]][spawn_point[1]] = 0;
+				JsonService.overwrite('gui', grid);
+			});
+			JsonService.load('gui_logic').then(function (data) {
+				var grid = data.data;
+				grid[spawn_point[0]][spawn_point[1]] = 0;
+				JsonService.overwrite('gui_logic', grid);
+			});
+			DatabaseService.special('human', 'delete', customer_id);
+			DatabaseService.special('human_has_order', 'deleteByHuman', customer_id);
+		}
+	}])
+;
 
 // This service is supposed to be called in each round of progress,
 // because it prepare parameter, check conditions and call other services,
 // these services doing all the logic for the simulator except gui components.
-// The PrepareService implement the CallWaiterService, HumanService, StoremanService, ChefService, CustomerService, TimeServices, RngService, DatabaseService and JsonService.
-simulationApp.service('PrepareService', ['DatabaseService', 'JsonService', 'CallWaiterService', 'HumanService', 'TimeService', 'RngService', 'StoremanService', 'ChefService', 'CustomerService',
-	function (DatabaseService, JsonService, CallWaiterService, HumanService, TimeService, RngService, StoremanService, ChefService, CustomerService) {
+// The PrepareService implement the CallWaiterService, StoremanService, ChefService, CustomerService, TimeServices, RngService, DatabaseService and JsonService.
+simulationApp.service('PrepareService', ['DatabaseService', 'JsonService', 'CallWaiterService', 'TimeService', 'RngService', 'StoremanService', 'ChefService', 'CustomerService',
+	function (DatabaseService, JsonService, CallWaiterService, TimeService, RngService, StoremanService, ChefService, CustomerService) {
 		var table_name = 'human';
 		var waiter;
 		var human;
@@ -386,13 +415,28 @@ simulationApp.service('PrepareService', ['DatabaseService', 'JsonService', 'Call
 		// Function has a chance of 1 percent to call the generateCustomer
 		this.spawnCustomer = function () {
 			var random_number = RngService.generate(100, 1);
-			//if (random_number == 50) {
-			HumanService.generateCustomer();
-			//}
+			if (random_number == 50) {
+				CustomerService.generateCustomer();
+			}
 		};
-		// Todo: Kommentar
+		// Function checks, if someone stand on the spawn point, if it's a customer,
+		// the CustomerService is called with the customer_id.
 		this.removeCustomer = function () {
-			// Todo: entrferne alle kunden, die am ausgang stehen (array position) und ordered auf 0 haben
+			var spawn_point = [1, 1];
+			JsonService.load('gui_logic').then(function (data) {
+				var gui_logic = data.data[spawn_point[0]][spawn_point[1]];
+				if (gui_logic != 0) {
+					DatabaseService.special('human', 'loadById', gui_logic);
+					setTimeout(function () {
+						JsonService.load('human').then(function (data) {
+							var human = data.data[0];
+							if (human['type'] == 'Customer' && human['ordered'] == 0 && human['ordered'] != null) {
+								CustomerService.removeCustomer(human['id']);
+							}
+						});
+					}, 100);
+				}
+			});
 		};
 	}])
 ;
