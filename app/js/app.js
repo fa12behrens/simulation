@@ -11,15 +11,9 @@ var simulationApp = angular.module('simulationApp', [
 
 // Route partials which are shown with ng-view, also adds a controller to this partial.
 simulationApp.config(['$routeProvider', function ($routeProvider) {
-	$routeProvider.when('/view1', {templateUrl: 'partials/partial1.html', controller: 'MyCtrl2'});
-	$routeProvider.when('/view2', {templateUrl: 'partials/partial2.html', controller: 'MyCtrl2'});
-	$routeProvider.when('/view3', {templateUrl: 'partials/partial3.html', controller: 'MyCtrl2'});
-	$routeProvider.when('/view4', {templateUrl: 'partials/partial4.html', controller: 'MyCtrl2'});
-	$routeProvider.when('/view5', {templateUrl: 'partials/partial5.html', controller: 'RngController'});
-	$routeProvider.when('/view6', {templateUrl: 'partials/partial6.html', controller: 'TimeController'});
+	$routeProvider.when('/view1', {templateUrl: 'partials/partial1.html'});
+	$routeProvider.when('/view2', {templateUrl: 'partials/partial2.html'});
 	$routeProvider.when('/view7', {templateUrl: 'partials/partial7.html', controller: 'CanvasController'});
-	$routeProvider.when('/view8', {templateUrl: 'partials/partial8.html', controller: 'TestDbController'});
-	$routeProvider.when('/view9', {templateUrl: 'partials/partial9.html', controller: 'HumanController'});
 	$routeProvider.when('/view10', {templateUrl: 'partials/partial10.html', controller: 'RoundController'});
 	$routeProvider.otherwise({redirectTo: '/view1'});
 }]);

@@ -4,35 +4,6 @@
 
 var simulationApp = angular.module('simulationApp.controllers', []);
 
-simulationApp.controller('CashController', ['$scope', '$http', 'CashService', function ($scope, $http, CashService) {
-
-	$scope.setCash = function () {
-		var data = $scope.data;
-		CashService.setCash(data);
-		$scope.clicked = data + '€ wurden gebucht!';
-
-		CashService.getCash().then(function (data) {
-			var cashlist = data.data.cashlist;
-			$scope.cashlist = cashlist;
-			$scope.calculated = CashService.calculate(cashlist);
-		});
-	};
-}]);
-simulationApp.controller('RngController', ['$scope', 'RngService', function ($scope, RngService) {
-	$scope.getRng = function () {
-		var probability = $scope.probability;
-		var bonus = $scope.bonus;
-		$scope.random_number = RngService.generate(probability, bonus);
-	}
-}]);
-simulationApp.controller('TimeController', ['$scope', 'TimeService', function ($scope, TimeService) {
-	var date = TimeService.createDate();
-	var time = TimeService.createTime();
-	$scope.date = date;
-	$scope.time = time;
-	$scope.foo = "droggelbecher";
-}]);
-
 simulationApp.controller('CanvasController', ['$scope', 'VisualizationService', 'SocketGridService', 'HandleGridService',
 	function ($scope, VisualizationService, SocketGridService, HandleGridService) {
 
@@ -68,14 +39,6 @@ simulationApp.controller('CanvasController', ['$scope', 'VisualizationService', 
 		HandleGridService.canvas();
 
 	}]);
-
-simulationApp.controller('TestDbController', ['$scope', 'DatabaseService', 'JsonService', function ($scope, DatabaseService, JsonService) {
-	DatabaseService.save("cash", "666");
-	DatabaseService.load("cash");
-	JsonService.load("cash").then(function (data) {
-		$scope.data = data.data;
-	});
-}]);
 
 // This controller starts the Simulator each round.
 simulationApp.controller('RoundController', ['$scope', 'PrepareService', 'DatabaseService', 'JsonService',
@@ -135,6 +98,3 @@ simulationApp.controller('RoundController', ['$scope', 'PrepareService', 'Databa
 			// Todo: load statistics
 		}
 	}]);
-
-simulationApp.controller('MyCtrl2', [function () {
-}]);

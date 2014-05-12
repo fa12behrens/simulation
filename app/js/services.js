@@ -8,40 +8,6 @@ var simulationApp = angular.module('simulationApp.services', []);
 
 simulationApp.value('version', '0.1');
 
-simulationApp.service('CashService', ['$http',
-	function ($http) {
-
-		this.getCash = function () {
-			return $http.get('json/json.json').success(function (data) {
-				return  data;
-			});
-		};
-
-		this.setCash = function (data) {
-			$(document).ready(function () {
-				$.post('php/jsonHandler.php',
-					{
-						data: data,
-						list: "cashlist",
-						file: "json"
-					},
-					function (data, status) {
-						//alert('Data: ' + data);
-					});
-			});
-		};
-
-		this.calculate = function (cash) {
-			var calculated = 0;
-			angular.forEach(cash, function (value, key) {
-				calculated = calculated + parseFloat(value);
-			});
-			return calculated;
-		};
-
-	}
-]);
-
 simulationApp.service('RngService', [
 	function () {
 		this.generate = function (probability, bonus) {
@@ -72,43 +38,6 @@ simulationApp.service('TimeService', [
 			time = time.getHours() + '-' + time.getMinutes() + '-' + time.getSeconds();
 			return time;
 		}
-	}
-]);
-
-simulationApp.service('HumanService', ['DatabaseService', 'JsonService', 'RngService',
-	function (DatabaseService, JsonService, RngService) {
-		var movement;
-		var action;
-		var morale;
-		var thoughts;
-
-		this.getFromHumanType = function (human_type_id) {
-			DatabaseService.loadByType("human_type", human_type_id);
-			JsonService.load("human_type").then(function (data) {
-				var humans_by_type = data.data;
-				console.log(humans_by_type);
-				return humans_by_type;
-
-			});
-		};
-		this.createHuman = function (name, gender, human_type_id) {
-			var value = [name, gender, human_type_id];
-			DatabaseService.save("human", value);
-		};
-		this.getHumans = function () {
-			DatabaseService.load("human");
-			JsonService.load("human").then(function (data) {
-				var humans = data.data;
-				console.log(humans);
-				return humans;
-			});
-		};
-		this.removeHuman = function (id) {
-			DatabaseService.special('human', 'delete', id);
-		};
-		this.calculateMoralThought = function () {
-			// choose one of the defined 1-10 morales/thoughts by waiting / receive cold food / get stressed / boring
-		};
 	}
 ]);
 
@@ -472,50 +401,6 @@ simulationApp.service('CallWaiterService', ['WaiterService',
 		}
 	}]);
 
-simulationApp.service('ResourceService', [
-	function () {
-
-		this.createResource = function (type, purchase_price) {
-			this.type = type;
-			this.purchase_price = purchase_price;
-			// save Resource into db or json
-		};
-		this.buyResource = function (resource_type, amount, durability) {
-			this.resource_type = resource_type;
-			this.amount = amount;
-			this.durability = durability;
-			// save Resource into db or json
-		};
-		this.consumeResource = function (id, amount) {
-			// update the amount by id
-		};
-		this.getResource = function (type) {
-			// load all resources by type
-		};
-		this.checkResourceDurability = function (type) {
-			// delete all resources which run out of date
-		};
-	}
-]);
-
-simulationApp.service('ProductService', [
-	function () {
-
-		this.researchProduct = function (type, ingredients, time_to_cold, price) {
-			// save Product into db or json
-		};
-		this.createProduct = function (product_type, creation_time) {
-			// save Resource into db or json;
-		};
-		this.consumeProduct = function (id) {
-			// remove the product by id;
-		};
-		this.getProduct = function (id) {
-			// load all products by id
-		};
-	}
-]);
-
 simulationApp.service('DatabaseService', [ '$http',
 	function ($http) {
 		this.load = function (table_name) {
@@ -539,63 +424,6 @@ simulationApp.service('DatabaseService', [ '$http',
 						table_name: table_name,
 						data: enc_data,
 						type: type
-					},
-					function (data, status) {
-						//alert('Data: ' + data);
-					});
-			});
-		};
-		this.loadById = function (table_name, id) {
-			var type = "loadById";
-			$(document).ready(function () {
-				$.post('php/databaseHandler.php',
-					{
-						table_name: table_name,
-						data: id,
-						type: type
-					},
-					function (data, status) {
-						//alert('Data: ' + data);
-					});
-			});
-		};
-		this.loadByType = function (table_name, table_type) {
-			var type = "loadByType";
-			$(document).ready(function () {
-				$.post('php/databaseHandler.php',
-					{
-						table_name: table_name,
-						data: table_type,
-						type: type
-					},
-					function (data, status) {
-						//alert('Data: ' + data);
-					});
-			});
-		};
-		this.delete = function (table_name, id) {
-			var type = "delete";
-			$(document).ready(function () {
-				$.post('php/databaseHandler.php',
-					{
-						table_name: table_name,
-						data: id,
-						type: type
-					},
-					function (data, status) {
-						//alert('Data: ' + data);
-					});
-			});
-		};
-		this.save = function (table_name, data) {
-			var type = "create";
-			var enc_data = JSON.stringify(data);
-			$(document).ready(function () {
-				$.post('php/databaseHandler.php',
-					{
-						table_name: table_name,
-						type: type,
-						data: enc_data
 					},
 					function (data, status) {
 						//alert('Data: ' + data);
