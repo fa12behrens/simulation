@@ -114,6 +114,7 @@ simulationApp.controller('RoundController', ['$scope', 'PrepareService', functio
 		//PrepareService.buyResources();
 		//PrepareService.prepareCook(3);
 		//PrepareService.prepareGenerateOrder(2);
+		PrepareService.spawnCustomer();
 	}
 }]);
 

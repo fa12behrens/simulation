@@ -75,8 +75,8 @@ simulationApp.service('TimeService', [
 	}
 ]);
 
-simulationApp.service('HumanService', ['DatabaseService', 'JsonService',
-	function (DatabaseService, JsonService) {
+simulationApp.service('HumanService', ['DatabaseService', 'JsonService', 'RngService',
+	function (DatabaseService, JsonService, RngService) {
 		var movement;
 		var action;
 		var morale;
@@ -103,11 +103,36 @@ simulationApp.service('HumanService', ['DatabaseService', 'JsonService',
 				return humans;
 			});
 		};
-		this.killHuman = function (id) {
-			DatabaseService.delete("human", id);
+		this.removeHuman = function (id) {
+			DatabaseService.special('human', 'delete', id);
 		};
 		this.calculateMoralThought = function () {
 			// choose one of the defined 1-10 morales/thoughts by waiting / receive cold food / get stressed / boring
+		};
+		// Function generate a random customer, save him into db and spawn him at the grid spawn point.
+		this.generateCustomer = function () {
+			var names = [
+				['GandalfBengston', 'Christoph', 'Martin'],
+				['Katarina', 'Sara', 'Melissa']
+			];
+			var gender = ['male', 'female'];
+			var human_type_id = 2;
+			var random_gender = gender[RngService.generate(gender.length, 0)];
+			var random_name = 'Undefined';
+			if (random_gender == 'male') {
+				random_name = names[0][RngService.generate(names[0].length, 0)];
+			}
+			else {
+				random_name = names[1][RngService.generate(names[0].length, 0)];
+			}
+			var data = [random_name, random_gender, human_type_id];
+			DatabaseService.special('human', 'create', data);
+			JsonService.load('gui').then(function (data) {
+				var grid = data.data;
+				var spawn_point = [1, 1];
+				grid[spawn_point[0]][spawn_point[1]] = 3;
+				JsonService.overwrite('gui', grid);
+			});
 		};
 	}
 ]);
@@ -271,9 +296,9 @@ simulationApp.service('CustomerService', ['DatabaseService', 'JsonService', 'Rng
 // This service is supposed to be called in each round of progress,
 // because it prepare parameter, check conditions and call other services,
 // these services doing all the logic for the simulator except gui components.
-// The PrepareService implement the CallWaiterService, StoremanService, ChefService, CustomerService, TimeServices, DatabaseService and JsonService.
-simulationApp.service('PrepareService', ['DatabaseService', 'JsonService', 'CallWaiterService', 'TimeService', 'StoremanService', 'ChefService', 'CustomerService',
-	function (DatabaseService, JsonService, CallWaiterService, TimeService, StoremanService, ChefService, CustomerService) {
+// The PrepareService implement the CallWaiterService, HumanService, StoremanService, ChefService, CustomerService, TimeServices, RngService, DatabaseService and JsonService.
+simulationApp.service('PrepareService', ['DatabaseService', 'JsonService', 'CallWaiterService', 'HumanService', 'TimeService', 'RngService', 'StoremanService', 'ChefService', 'CustomerService',
+	function (DatabaseService, JsonService, CallWaiterService, HumanService, TimeService, RngService, StoremanService, ChefService, CustomerService) {
 		var table_name = 'human';
 		var waiter;
 		var human;
@@ -341,7 +366,7 @@ simulationApp.service('PrepareService', ['DatabaseService', 'JsonService', 'Call
 					}
 				});
 			}, 100);
-		}
+		};
 		// Function require the current customer id and call the customer to generate an order
 		// after it created a probability based on the number of product_types.
 		this.prepareGenerateOrder = function (customer_id) {
@@ -352,11 +377,22 @@ simulationApp.service('PrepareService', ['DatabaseService', 'JsonService', 'Call
 					var product_types = data.data;
 					var probability = 0;
 					angular.forEach(product_types, function (value, key) {
-					probability += 1;
+						probability += 1;
 					});
 					CustomerService.generateOrder(customer_id, probability, 1);
 				});
 			}, 100);
+		};
+		// Function has a chance of 1 percent to call the generateCustomer
+		this.spawnCustomer = function () {
+			var random_number = RngService.generate(100, 1);
+			//if (random_number == 50) {
+			HumanService.generateCustomer();
+			//}
+		};
+		// Todo: Kommentar
+		this.removeCustomer = function () {
+			// Todo: entrferne alle kunden, die am ausgang stehen (array position) und ordered auf 0 haben
 		};
 	}])
 ;
@@ -539,6 +575,18 @@ simulationApp.service('JsonService', [ '$http',
 					{
 						data: data,
 						list: list,
+						file: file
+					},
+					function (data, status) {
+						//alert('Data: ' + data);
+					});
+			});
+		};
+		this.overwrite = function (file, data) {
+			$(document).ready(function () {
+				$.post('php/jsonHandler.php',
+					{
+						data: data,
 						file: file
 					},
 					function (data, status) {
