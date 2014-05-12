@@ -231,21 +231,35 @@ simulationApp.service('StoremanService', ['DatabaseService', 'TimeService', 'Jso
 		}
 	}]);
 
-// Todo: Kommentar
-simulationApp.service('CustomerService', ['DatabaseService',
-	function (DatabaseService) {
-
-		this.generateOrder = function () {
-			// TODO: erstelle eine zufällige order
+// The Service can order, take order and generate order.
+// The customer has relations with DatabaseService, JsonService and RngService.
+simulationApp.service('CustomerService', ['DatabaseService', 'JsonService', 'RngService',
+	function (DatabaseService, JsonService, RngService) {
+		// This function create a new order for the customer which is given by parameters,
+		// the product_type which ordered is generated with a RNG, based on the parameters, probability and bonus.
+		this.generateOrder = function (customer_id, probability, bonus) {
+			var random_product_type_id = RngService.generate(probability, bonus);
+			DatabaseService.special('order', 'create', random_product_type_id);
+			setTimeout(function () {
+				DatabaseService.special('order', 'loadByType', random_product_type_id);
+				setTimeout(function () {
+					JsonService.load('order').then(function (data) {
+						var order_id = data.data[0]['id'];
+						data = [customer_id, order_id];
+						DatabaseService.special('human_has_order', 'create', data);
+					});
+				}, 500);
+			}, 500);
 		};
-
+		// This function delete the relation between the waiter and his product,
+		// but also it set the order status to 0, which means closed. (null->open, 1->ordered, 0->closed)
 		this.takeOrder = function (waiter, customer) {
 			var data = [waiter['id'], waiter['product_id']];
 			DatabaseService.special('human_has_product', 'delete', data);
 			data = [customer['order_id'], 0];
 			DatabaseService.special('order', 'update', data);
 		};
-
+		// This function set the order status to 1 and create a relation between waiter and order.
 		this.getOrder = function (waiter, customer) {
 			var data = [customer['order_id'], 1];
 			DatabaseService.special('order', 'update', data);
@@ -257,9 +271,9 @@ simulationApp.service('CustomerService', ['DatabaseService',
 // This service is supposed to be called in each round of progress,
 // because it prepare parameter, check conditions and call other services,
 // these services doing all the logic for the simulator except gui components.
-// The PrepareService implement the CallWaiterService, StoremanService, ChefService, TimeServices, DatabaseService and JsonService.
-simulationApp.service('PrepareService', ['DatabaseService', 'JsonService', 'CallWaiterService', 'TimeService', 'StoremanService', 'ChefService',
-	function (DatabaseService, JsonService, CallWaiterService, TimeService, StoremanService, ChefService) {
+// The PrepareService implement the CallWaiterService, StoremanService, ChefService, CustomerService, TimeServices, DatabaseService and JsonService.
+simulationApp.service('PrepareService', ['DatabaseService', 'JsonService', 'CallWaiterService', 'TimeService', 'StoremanService', 'ChefService', 'CustomerService',
+	function (DatabaseService, JsonService, CallWaiterService, TimeService, StoremanService, ChefService, CustomerService) {
 		var table_name = 'human';
 		var waiter;
 		var human;
@@ -328,6 +342,22 @@ simulationApp.service('PrepareService', ['DatabaseService', 'JsonService', 'Call
 				});
 			}, 100);
 		}
+		// Function require the current customer id and call the customer to generate an order
+		// after it created a probability based on the number of product_types.
+		this.prepareGenerateOrder = function (customer_id) {
+			var table_name = 'product_type';
+			DatabaseService.load(table_name);
+			setTimeout(function () {
+				JsonService.load(table_name).then(function (data) {
+					var product_types = data.data;
+					var probability = 0;
+					angular.forEach(product_types, function (value, key) {
+					probability += 1;
+					});
+					CustomerService.generateOrder(customer_id, probability, 1);
+				});
+			}, 100);
+		};
 	}])
 ;
 

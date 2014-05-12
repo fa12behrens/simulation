@@ -13,8 +13,7 @@ class product_type {
 	{
 		switch ($type) {
 			case 'load':
-				$this->sql = "SELECT * FROM `product` p
-				INNER JOIN `product_type` pt ON p.product_type_id = pt.id";
+				$this->sql = "SELECT * FROM `product_type`";
 				break;
 			case 'loadById':
 				$this->sql = "SELECT * FROM `product_type`

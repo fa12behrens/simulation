@@ -17,16 +17,23 @@ class order {
 							WHERE human_id = $data
 							LIMIT 1";
 				break;
+			case 'loadByType':
+				$this->sql = "SELECT * FROM `order`
+				WHERE order_product_type_id = $data
+				ORDER BY
+        		`id` DESC
+  				LIMIT
+        		1";
+				break;
 			case 'create':
-				$human_id = $data[0];
-				$product_id = $data[1];
 				if ($data !== null) {
 					$this->sql = "INSERT INTO  `simulator`.`order` (
 								`id`,
-								`product_id`
+								`order_product_type_id`,
+								`ordered`
 								)
 								VALUES (
-								null, $product_id)";
+								null, $data, null)";
 				}
 				break;
 			case 'update':
