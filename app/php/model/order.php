@@ -12,11 +12,6 @@ class order {
 	public function getSql($type, $data = null)
 	{
 		switch ($type) {
-			case 'loadOneById':
-				$this->sql = "SELECT * FROM `human_has_product`
-							WHERE human_id = $data
-							LIMIT 1";
-				break;
 			case 'loadByType':
 				$this->sql = "SELECT * FROM `order`
 				WHERE order_product_type_id = $data
@@ -45,18 +40,8 @@ class order {
 								WHERE id = $id";
 				}
 				break;
-			case 'delete':
-				$human_id = $data[0];
-				$product_id = $data[1];
-				$this->sql = "DELETE FROM `human_has_product`
-				WHERE human_id = $human_id AND product_id = $product_id";
-				break;
 			case 'truncate':
-				$this->sql = "TRUNCATE `product`";
-				break;
-			default:
-				$this->sql = "SELECT * FROM `product` p
-				INNER JOIN `product_type` pt ON p.product_type_id = pt.id";
+				$this->sql = "TRUNCATE `order`";
 				break;
 		}
 

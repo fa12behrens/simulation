@@ -77,18 +77,6 @@ class human
 			case 'truncate':
 				$this->sql = "TRUNCATE `human`";
 				break;
-			default:
-				$this->sql = "SELECT h.id, h.name, h.gender, ht.type, hho.order_id, o.order_product_type_id, o.ordered, p.creation_time, p.product_type_id,
-				pt.ingredients, pt.time_to_cold, pt.price, hhp.product_id
-   				FROM `human` h
-			 	INNER JOIN `human_type` ht ON h.human_type_id = ht.id
-				LEFT JOIN `human_has_order` hho ON h.id = hho.human_id
-				LEFT JOIN `order` o ON hho.order_id = o.id
-				LEFT JOIN `human_has_product` hhp ON h.id = hhp.human_id
-				LEFT JOIN `product` p ON hhp.product_id = p.id
-				LEFT JOIN `product_type` pt ON p.product_type_id = pt.id
-				GROUP BY h.id";
-				break;
 		}
 
 		return $this->sql;

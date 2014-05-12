@@ -45,10 +45,6 @@ class product
 			case 'truncate':
 				$this->sql = "TRUNCATE `product`";
 				break;
-			default:
-				$this->sql = "SELECT * FROM `product` p
-				INNER JOIN `product_type` pt ON p.product_type_id = pt.id";
-				break;
 		}
 
 		return $this->sql;

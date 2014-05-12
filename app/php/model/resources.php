@@ -61,10 +61,6 @@ class resources
 			case 'truncate':
 				$this->sql = "TRUNCATE `resources`";
 				break;
-			default:
-				$this->sql = "SELECT r.id, r.durability, r.amount, r.resource_type_id, rt.type, rt.purchase_price FROM `resources` r
-				INNER JOIN `resource_type` rt ON r.resource_type_id = rt.id";
-				break;
 		}
 
 		return $this->sql;
