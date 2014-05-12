@@ -58,7 +58,13 @@ simulationApp.service('TimeService', [
 	function () {
 		this.createDate = function () {
 			var date = new Date();
-			date = date.getDate() + '-' + (date.getMonth() + 1) + '-' + date.getFullYear();
+			date = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+			return date;
+		};
+		this.createDurability = function (days) {
+			var date = new Date();
+			date.setDate(date.getDate() + days);
+			date = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
 			return date;
 		};
 		this.createTime = function () {
@@ -139,20 +145,58 @@ simulationApp.service('WaiterService', ['ChefService', 'CustomerService', 'Datab
 	}]);
 
 // The service can accept orders, cook and deliver products,
-// Todo: Komentar
+// he use DatabaseService and JsonService.
 simulationApp.service('ChefService', [ 'DatabaseService', 'JsonService',
 	function (DatabaseService, JsonService) {
+		// This function require the chef id and the product type id from current order,
+		// it loads several needed data and check if the resource must be deleted (empty) or just updated by amount.
+		// After this, it create a new product in database and define the human_has_product relationship,
+		// the human_has_order relation will be deleted as last process.
+		this.cook = function (chef_id, product_type_id) {
+			DatabaseService.special('product_type', 'loadById', product_type_id);
+			setTimeout(function () {
+				JsonService.load('product_type').then(function (data) {
+					var product_type = data.data[0];
+					var resource_type = product_type['ingredients'];
+					DatabaseService.special('resources', 'loadByType', resource_type);
+					setTimeout(function () {
+						JsonService.load('resources').then(function (data) {
+							var resource = data.data[0];
+							var amount = resource['amount'];
+							amount -= 1;
+							if (amount === 0) {
 
-		this.cook = function () {
-			// Todo: order holen und das product kochen
-			// Todo: order vom koch löschen, product adden und resources löschen
+								DatabaseService.special('resources', 'delete', resource['id']);
+							} else {
+								data = [resource['id'], amount];
+								DatabaseService.special('resources', 'update', data);
+							}
+							DatabaseService.special('product', 'create', product_type_id);
+							setTimeout(function () {
+								DatabaseService.special('product', 'loadByType', product_type_id);
+								setTimeout(function () {
+									JsonService.load('product').then(function (data) {
+										var product = data.data[0];
+										data = [chef_id, product['id']];
+										DatabaseService.special('human_has_product', 'create', data);
+										DatabaseService.special('human_has_order', 'deleteByHuman', chef_id);
+									});
+								}, 500);
+							}, 500);
+						});
+					}, 500);
+				});
+			}, 500);
+			setTimeout(function () {
+			}, 500);
 		};
-
+		// Just set an relationship in the database.
 		this.setOrder = function (chef_id, order_id) {
 			var data = [chef_id, order_id];
 			DatabaseService.special('human_has_order', 'create', data);
 		};
-
+		// This function load required data with given human_ids and
+		// move the product from chef to waiter, by editing the database relations.
 		this.takeProduct = function (waiter_id, chef_id) {
 			var table_name = 'human_has_product';
 			DatabaseService.special(table_name, 'loadOneById', chef_id);
@@ -170,11 +214,20 @@ simulationApp.service('ChefService', [ 'DatabaseService', 'JsonService',
 		}
 	}]);
 
-// Todo: Kommentar
-simulationApp.service('StoremanService', [
-	function () {
-		this.buyResources = function () {
-			// Todo füge resources in der datenbank hinzu und ziehe die cash kosten ab
+// This Service add new database entries, one for an given amount of resources and one for the purchase price in cash.
+simulationApp.service('StoremanService', ['DatabaseService', 'TimeService', 'JsonService',
+	function (DatabaseService, TimeService, JsonService) {
+		this.buyResources = function (resource_type_id, amount) {
+			DatabaseService.special('resource_type', 'loadById', resource_type_id);
+			setTimeout(function () {
+				JsonService.load('resource_type').then(function (data) {
+					var purchase_price = -1 * (parseInt(data.data[0]['purchase_price']));
+					DatabaseService.special('cash', 'create', purchase_price);
+				});
+				var durability = TimeService.createDurability(5);
+				var data = [durability, amount, resource_type_id];
+				DatabaseService.special('resources', 'create', data);
+			}, 500);
 		}
 	}]);
 
@@ -204,9 +257,9 @@ simulationApp.service('CustomerService', ['DatabaseService',
 // This service is supposed to be called in each round of progress,
 // because it prepare parameter, check conditions and call other services,
 // these services doing all the logic for the simulator except gui components.
-// The PrepareService implement the CallWaiterService, DatabaseService and JsonService.
-simulationApp.service('PrepareService', ['DatabaseService', 'JsonService', 'CallWaiterService',
-	function (DatabaseService, JsonService, CallWaiterService) {
+// The PrepareService implement the CallWaiterService, StoremanService, ChefService, TimeServices, DatabaseService and JsonService.
+simulationApp.service('PrepareService', ['DatabaseService', 'JsonService', 'CallWaiterService', 'TimeService', 'StoremanService', 'ChefService',
+	function (DatabaseService, JsonService, CallWaiterService, TimeService, StoremanService, ChefService) {
 		var table_name = 'human';
 		var waiter;
 		var human;
@@ -230,14 +283,53 @@ simulationApp.service('PrepareService', ['DatabaseService', 'JsonService', 'Call
 				}, 1000);
 			}, 1000);
 		};
-		this.buyResources = function(){
-		// Todo: Hole alle resources
-		// Todo: Entferne abgelaufene resources	?
-		// Todo: Zähle alle resources mit dem selben type zusammen
-		// Todo: Wenn das result kleiner als X soll der Storeman X neue resources des types kaufen,
-		// Todo: also in die DB schreiben und in der db den negativen cash Betrag buchen
+		// Function which check what the storeman must do,
+		// at first it will delete all expired resources
+		// and after this it will call the storeman to buy resources, if any resource_type has under 10 pieces in stock.
+		this.buyResources = function () {
+			var resources;
+			var amounts = [];
+			var table_name = 'resources';
+			var current_date = TimeService.createDate();
+			DatabaseService.special(table_name, 'deleteExpired', current_date);
+			setTimeout(function () {
+				DatabaseService.load(table_name);
+				setTimeout(function () {
+					JsonService.load(table_name).then(function (data) {
+						resources = data.data;
+						for (var i = 0; i < resources.length; i++) {
+							var resource_type_id = resources[i]['resource_type_id'];
+							if (amounts[resource_type_id]) {
+								amounts[resource_type_id] += parseInt(resources[i]['amount']);
+							}
+							else {
+								amounts[resource_type_id] = parseInt(resources[i]['amount']);
+							}
+						}
+						angular.forEach(amounts, function (amount, resource_type_id) {
+							if (amount < 10) {
+								var to_buy = 20 - amount;
+								StoremanService.buyResources(resource_type_id, to_buy);
+							}
+						});
+					});
+				}, 100);
+			}, 100);
+		};
+		// Function checks if the current chef has an order, if this is true, it will call the chef cook function.
+		this.prepareCook = function (chef_id) {
+			DatabaseService.special('human', 'loadById', chef_id);
+			setTimeout(function () {
+				JsonService.load(table_name).then(function (data) {
+					var chef = data.data[0];
+					if (chef['order_id'] !== null) {
+						ChefService.cook(chef['id'], chef['order_product_type_id']);
+					}
+				});
+			}, 100);
 		}
-	}]);
+	}])
+;
 
 // The service call one function from the WaiterService after checking which one can be called.
 simulationApp.service('CallWaiterService', ['WaiterService',

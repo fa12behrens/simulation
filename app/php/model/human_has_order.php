@@ -34,6 +34,12 @@ class human_has_order {
 				$this->sql = "DELETE FROM `human_has_order`
 				WHERE human_id = $human_id AND order_id = $order_id";
 				break;
+			case 'deleteByHuman':
+				$this->sql = "DELETE FROM `human_has_order`
+				WHERE human_id = $data
+				ORDER BY human_id
+				Limit 1";
+				break;
 			case 'truncate':
 				$this->sql = "TRUNCATE `product`";
 				break;

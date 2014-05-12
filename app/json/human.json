@@ -1,1 +1,1 @@
-[{"id":"2","name":"EvilKenivel","gender":"male","type":"Customer","order_id":"1","order_product_type_id":"1","ordered":"1","creation_time":null,"product_type_id":null,"ingredients":null,"time_to_cold":null,"price":null,"product_id":null}]
+[{"id":"3","name":"Alice","gender":"female","type":"Chef","order_id":"1","order_product_type_id":"1","ordered":"0","creation_time":"2014-05-08 14:21:29","product_type_id":"1","ingredients":"nudeln","time_to_cold":"00:10:00","price":"10","product_id":"1"}]

@@ -13,6 +13,10 @@ include_once('model/human.php');
 include_once('model/human_type.php');
 include_once('model/human_has_order.php');
 include_once('model/human_has_product.php');
+include_once('model/resources.php');
+include_once('model/resource_type.php');
+include_once('model/product.php');
+include_once('model/product_type.php');
 include_once('jsonHandler.php');
 
 class databaseHandler
@@ -99,7 +103,7 @@ else{
 
 else {
 	$handler = new databaseHandler();
-	$data = 3;
-	$handler->execute("human", "loadById", $data);
+	$data = ["2014-5-14", 17, 1] ;
+	$handler->execute("human_has_order", "deleteByHuman", 3);
 }
 */

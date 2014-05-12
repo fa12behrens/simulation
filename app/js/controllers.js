@@ -107,10 +107,12 @@ simulationApp.controller('WaiterController', ['$scope', 'HumanService', 'WaiterS
 	//HumanService.killHuman(11);
 }]);
 
-// This controller starts the Simulator each round.
+// This controller starts the Simulator each round, need human_ids.
 simulationApp.controller('RoundController', ['$scope', 'PrepareService', function ($scope, PrepareService) {
 	$scope.start = function () {
-		PrepareService.execute(1,2);
+		//PrepareService.execute(1,2);
+		//PrepareService.buyResources();
+		//PrepareService.prepareCook(3);
 	}
 }]);
 

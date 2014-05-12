@@ -23,7 +23,8 @@ class human
 				LEFT JOIN `order` o ON hho.order_id = o.id
 				LEFT JOIN `human_has_product` hhp ON h.id = hhp.human_id
 				LEFT JOIN `product` p ON hhp.product_id = p.id
-				LEFT JOIN `product_type` pt ON p.product_type_id = pt.id";
+				LEFT JOIN `product_type` pt ON p.product_type_id = pt.id
+				GROUP BY h.id";
 				break;
 			case 'loadById':
 				$this->sql = "SELECT h.id, h.name, h.gender, ht.type, hho.order_id, o.order_product_type_id, o.ordered, p.creation_time, p.product_type_id,
@@ -35,7 +36,8 @@ class human
 				LEFT JOIN `human_has_product` hhp ON h.id = hhp.human_id
 				LEFT JOIN `product` p ON hhp.product_id = p.id
 				LEFT JOIN `product_type` pt ON p.product_type_id = pt.id
-				WHERE h.id = $data";
+				WHERE h.id = $data
+				GROUP BY h.id";
 				break;
 			case 'create':
 				$name = $data[0];
@@ -69,7 +71,8 @@ class human
 				LEFT JOIN `order` o ON hho.order_id = o.id
 				LEFT JOIN `human_has_product` hhp ON h.id = hhp.human_id
 				LEFT JOIN `product` p ON hhp.product_id = p.id
-				LEFT JOIN `product_type` pt ON p.product_type_id = pt.id";
+				LEFT JOIN `product_type` pt ON p.product_type_id = pt.id
+				GROUP BY h.id";
 				break;
 		}
 
