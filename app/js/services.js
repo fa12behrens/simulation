@@ -110,14 +110,14 @@ simulationApp.service('ChefService', [ 'DatabaseService', 'JsonService',
 										DatabaseService.special('human_has_product', 'create', data);
 										DatabaseService.special('human_has_order', 'deleteByHuman', chef_id);
 									});
-								}, 500);
-							}, 500);
+								}, 100);
+							}, 100);
 						});
-					}, 500);
+					}, 100);
 				});
-			}, 500);
+			}, 100);
 			setTimeout(function () {
-			}, 500);
+			}, 100);
 		};
 		// Just set an relationship in the database.
 		this.setOrder = function (chef_id, order_id) {
@@ -139,7 +139,7 @@ simulationApp.service('ChefService', [ 'DatabaseService', 'JsonService',
 						DatabaseService.special(table_name, 'create', data);
 					}
 				});
-			}, 500);
+			}, 100);
 		}
 	}]);
 
@@ -156,7 +156,7 @@ simulationApp.service('StoremanService', ['DatabaseService', 'TimeService', 'Jso
 				var durability = TimeService.createDurability(5);
 				var data = [durability, amount, resource_type_id];
 				DatabaseService.special('resources', 'create', data);
-			}, 500);
+			}, 100);
 		}
 	}]);
 
@@ -177,8 +177,8 @@ simulationApp.service('CustomerService', ['DatabaseService', 'JsonService', 'Rng
 						data = [customer_id, order_id];
 						DatabaseService.special('human_has_order', 'create', data);
 					});
-				}, 500);
-			}, 500);
+				}, 100);
+			}, 100);
 		};
 		// This function delete the relation between the waiter and his product,
 		// but also it set the order status to 0, which means closed. (null->open, 1->ordered, 0->closed)
@@ -277,8 +277,8 @@ simulationApp.service('PrepareService', ['DatabaseService', 'JsonService', 'Call
 					setTimeout(function () {
 						CallWaiterService.execute(waiter[0], human[0]);
 					}, 100);
-				}, 1000);
-			}, 1000);
+				}, 100);
+			}, 100);
 		};
 		// Function which check what the storeman must do,
 		// at first it will delete all expired resources
@@ -367,6 +367,12 @@ simulationApp.service('PrepareService', ['DatabaseService', 'JsonService', 'Call
 				}
 			});
 		};
+		// Todo:
+		this.loadData = function(){
+			var data_array = [];
+
+			return data_array;
+		}
 	}])
 ;
 
@@ -400,6 +406,13 @@ simulationApp.service('CallWaiterService', ['WaiterService',
 			}
 		}
 	}]);
+
+// Todo:
+simulationApp.service('LoaderService', [ 'DatabaseService', 'JsonService',
+	function (DatabaseService, JsonService) {
+
+	}
+]);
 
 simulationApp.service('DatabaseService', [ '$http',
 	function ($http) {
