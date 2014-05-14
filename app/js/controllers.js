@@ -4,13 +4,6 @@
 
 var simulationApp = angular.module('simulationApp.controllers', []);
 
-simulationApp.controller('PreController', ['$scope', 'DatabaseService', 'JsonService',
-	function ($scope, DatabaseService, JsonService) {
-		// Lade das Grid
-		// Baue das Grid und das Grid_logic Array mit den getätigten eingaben zusammen
-		// Speicher das Grid
-	}]);
-
 // This controller starts the Simulator each round.
 // It's like the motherboard of our app, which can started and stopped via button.
 // If started, each interval called the intervalJob which doing all the stuff for a round / interval.
@@ -94,7 +87,8 @@ simulationApp.controller('RoundController', ['$scope', 'PrepareService', 'Databa
 		}
 	}]);
 
-simulationApp.controller('ddController', ['$scope', 'DatabaseService', 'JsonService', 'RngService', function ($scope, DatabaseService, JsonService, RngService) { // function referenced by the drop target
+// This Controller let you add, change, load and save the grid array.
+simulationApp.controller('PreController', ['$scope', 'DatabaseService', 'JsonService', 'RngService', function ($scope, DatabaseService, JsonService, RngService) { // function referenced by the drop target
 	var grid = [
 		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
 		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
@@ -151,6 +145,7 @@ simulationApp.controller('ddController', ['$scope', 'DatabaseService', 'JsonServ
 		'orange': '5'
 	};
 
+	// Load the grid jsons into the grid arrays
 	$scope.load = function () {
 		JsonService.load('gui').then(function (data) {
 			grid = data.data;
@@ -159,12 +154,19 @@ simulationApp.controller('ddController', ['$scope', 'DatabaseService', 'JsonServ
 			grid_logic = data.data;
 		});
 	};
+	// Save the grid arrays into the grid jsons
 	$scope.save = function () {
 			JsonService.overwrite('gui', grid);
 			JsonService.overwrite('gui_logic', grid_logic);
 		};
+	// Handle the drag and drop actions by getting the current moved html elements.
+	// Set the color, if there already is an color, the color will be changed, or deleted when color is empty.
+	// The given drop element will be explored in several steps,
+	// split, forEach get the required data, if checks if any color is set,
+	// if it's true it will set the object into the array position and if the object is a human,
+	// it will load and save the human_id into the grid_logic array too.
+	// At last, elements that would drag away lose their color.
 	$scope.dropped = function (dragEl, dropEl) {
-		//this is application logic, for the demo we just want to color the grid squares
 		//the directive provides a native dom object, wrap with jqlite
 		var drop = angular.element(dropEl);
 		var drag = angular.element(dragEl);

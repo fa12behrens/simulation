@@ -120,7 +120,7 @@
 
 				</div>
 
-				<div ng-controller="ddController" class='' id='options'>
+				<div ng-controller="PreController" class='' id='options'>
 					<div class="border">
 						Um Ihre Änderungen zu laden oder zu speichern, nutzen sie bitte folgende Buttons:
 						<input ng-click="load()" class='btn btn-default' type='submit' name='submitLoad' value="Laden">
@@ -147,7 +147,7 @@
 								<div ng-repeat="r in rix">
 									<span class="slot circle" ng-repeat="c in cix"
 										  x-lvl-drop-target="true" x-on-drop="dropped(dragEl, dropEl)" ng-value="r">
-									<img src='img/simulator/field.png' class='opac' alt='Jinx' height='25px' ng-value="c"
+									<img src='img/simulator/field.png' class='opac' height='25px' ng-value="c"
 										 width='25px'>
 									</span>
 								</div>

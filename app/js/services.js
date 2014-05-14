@@ -590,6 +590,8 @@ simulationApp.service('VisualizationService', [
 	}
 ]);
 
+// This function is irrelevant for the simulator but without, the drag and drop would not work,
+// because the directives need this id, which is returned in this function.
 simulationApp.factory('uuid', function() {
 	var svc = {
 		new: function() {

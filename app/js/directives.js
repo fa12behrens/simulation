@@ -9,7 +9,8 @@ simulationApp.directive('appVersion', ['version', function (version) {
 		elm.text(version);
 	};
 }]);
-// Todo: Fehlermeldung beheben
+
+// Todo: Fehlermeldung beheben und bessere Kommentare
 // directives activate the accordion and the tab component from jquery-ui
 simulationApp.directive('hboAccordion',[ function () {
 	return {
@@ -28,13 +29,13 @@ simulationApp.directive('hboTabs',[ function () {
 	};
 }]);
 
-
+// This directive allow us to drag items, restrict A means. that only attribute names will match,
+// the function get elements where draggable true, it will set their id to an generated id from uuid
+// and bind the dragstart and dragend.
 simulationApp.directive('lvlDraggable', ['$rootScope', 'uuid', function($rootScope, uuid) {
 	return {
 		restrict: 'A',
-		link: function(scope, el, attrs, controller) {
-			console.log("linking draggable element");
-
+		link: function(scope, el) {
 			angular.element(el).attr("draggable", "true");
 			var id = angular.element(el).attr("id");
 			if (!id) {
@@ -54,14 +55,15 @@ simulationApp.directive('lvlDraggable', ['$rootScope', 'uuid', function($rootSco
 		}
 	}
 }]);
-
+// This directive allow us to drop items, also set the uuid id and bind drag status.
+// If any changes like it do some actions like add or remove a css class to the html element.
 simulationApp.directive('lvlDropTarget', ['$rootScope', 'uuid', function($rootScope, uuid) {
 	return {
 		restrict: 'A',
 		scope: {
 			onDrop: '&'
 		},
-		link: function(scope, el, attrs, controller) {
+		link: function(scope, el) {
 			var id = angular.element(el).attr("id");
 			if (!id) {
 				id = uuid.new()
