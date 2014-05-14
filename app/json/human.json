@@ -1,1 +1,1 @@
-[{"id":"3","name":"Alice","gender":"female","type":"Chef","order_id":"2","order_product_type_id":"2","ordered":null,"creation_time":"2014-05-08 14:21:29","product_type_id":"1","ingredients":"nudeln","time_to_cold":"00:10:00","price":"10","product_id":"1"}]
+[{"id":"1","name":"Droggelbecher","gender":"male","type":"Waiter","order_id":null,"order_product_type_id":null,"ordered":null,"creation_time":null,"product_type_id":null,"ingredients":null,"time_to_cold":null,"price":null,"product_id":null}]

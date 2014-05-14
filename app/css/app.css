@@ -34,7 +34,7 @@ body {
 	background: #111111 url(../../bower_components/jquery-ui/themes/dot-luv/images/ui-bg_gloss-wave_20_111111_500x100.png) 50% top repeat-x;
 	background: #111111 url(../../bower_components/jquery-ui/themes/dot-luv/images/ui-bg_dots-small_20_333333_2x2.png);
 	*/
-	background: url(../img/bg/bgb.PNG);
+	background: url(../img/bg/bgbox.PNG);
 }
 
 .btn {
@@ -44,11 +44,12 @@ body {
 .container {
 	margin-top: 10px;
 	position: relative;
-	background: #00498f url(../img/bg/bgg.PNG);
+	background: #00498f url(../img/bg/bgp.PNG);
 	opacity: 0.9;
 	border-radius: 20px;
 	color: #000000;
 	box-shadow: 2px 2px 4px 4px #000000;
+	min-width: 1200px;
 }
 
 .item {
@@ -57,26 +58,6 @@ body {
 	height: 80px;
 	background: greenyellow;
 	border: 3px dotted grey;
-}
-
-.dropzone {
-	float: left;
-	width: 110px;
-	min-height: 110px;
-	height: auto;
-	background: #ffff00;
-	border: 3px dotted grey;
-	margin-left: 10px;
-}
-
-.dropzonen {
-	float: left;
-	width: 110px;
-	min-height: 110px;
-	height: auto;
-	background: hotpink;
-	border: 3px dotted grey;
-	margin-left: 10px;
 }
 
 .row {
@@ -102,10 +83,109 @@ body {
 
 .tab {
 	min-height: 500px;
-	max-height: 625px;
-	overflow: scroll;
+	max-height: 750px;
+	overflow: hidden /*scroll*/;
+	margin-bottom: 10px;
 }
 
 .special {
-	background: #ffffff;
+	/*	font-family: cursive;*/
+	background: #ffffff url(../img/bg/bgy.PNG);
+}
+
+.lvl-over {
+	/* applied to a drop target when a draggable object is over it */
+	border: 2px dashed black !important;
+}
+
+.lvl-target {
+	/*
+	applied to all drop targets when a drag operation begins
+	removed when the drag operation ends
+	used to indicate drop targets on a page
+	*/
+	background-color: #ddd;
+	opacity: 0.5;
+}
+
+[draggable] {
+	/* not applied by the directive, but useful to indicate a draggable element */
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	user-select: none;
+	cursor: move;
+	border:1px solid black;
+}
+
+.peg {
+	text-align: center;
+	font-weight: bold;
+	border:1px burlywood solid;
+	border-radius: 5px;
+	width: 75px;
+	margin: 10px;
+}
+
+.slot {
+	margin-right:2px;
+	margin-top:2px;
+	width:25;
+	height:25px;
+	display:inline-block;
+	border: none;
+}
+
+.red {
+	background-color: red;
+	color: white;
+}
+
+.blue {
+	background-color: blue;
+	color: white;
+}
+
+.green {
+	background-color: green;
+	color: white;
+}
+
+.black {
+	background-color: black;
+	color: white;
+}
+
+.grey {
+	background-color: grey;
+	color: white;
+}
+
+.yellow {
+	background-color: #ffff00;
+}
+
+.brown {
+	background-color: brown;
+	color: white;
+}
+
+.magenta {
+	background-color: #ff00ff;
+	color: white;
+}
+
+.orange {
+	background-color: orange;
+	color: white;
+}
+
+.opac{
+	opacity:0.6;
+}
+
+.border{
+	border: 2px double burlywood;
+	border-radius: 10px;
+/*	background: url(../img/bg/bgb.PNG);*/
 }

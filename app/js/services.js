@@ -6,8 +6,10 @@
 // In this case it is a simple value service.
 var simulationApp = angular.module('simulationApp.services', []);
 
+// Add version to the App value
 simulationApp.value('version', '0.1');
 
+// Create a random number based on given parameters (probability = max, bonus = min)
 simulationApp.service('RngService', [
 	function () {
 		this.generate = function (probability, bonus) {
@@ -20,6 +22,8 @@ simulationApp.service('RngService', [
 	}
 ]);
 
+// This Service can create a current Timestamp for Date, Time or for an Date in the future,
+// called as durability and need days as parameter.
 simulationApp.service('TimeService', [
 	function () {
 		this.createDate = function () {
@@ -368,7 +372,7 @@ simulationApp.service('PrepareService', ['DatabaseService', 'JsonService', 'Call
 			});
 		};
 		// Todo:
-		this.loadData = function(){
+		this.loadData = function () {
 			var data_array = [];
 
 			return data_array;
@@ -407,13 +411,28 @@ simulationApp.service('CallWaiterService', ['WaiterService',
 		}
 	}]);
 
-// Todo:
+// This service returned an multidimensional array with data which should be displayed.
 simulationApp.service('LoaderService', [ 'DatabaseService', 'JsonService',
 	function (DatabaseService, JsonService) {
-
+		var data = [];
+		DatabaseService.load('cash');
+		DatabaseService.load('resources');
+		setTimeout(function () {
+			JsonService.load('cash').then(function (data) {
+				data['cash'] = data.data;
+			});
+			JsonService.load('resources').then(function (data) {
+				data['resources'] = data.data;
+			});
+			// Additional data will added if wanted
+			setTimeout(function () {
+				return data;
+			}, 50);
+		}, 100)
 	}
 ]);
 
+// This Service send post requests with data to the server, exact to databaseHandler.php.
 simulationApp.service('DatabaseService', [ '$http',
 	function ($http) {
 		this.load = function (table_name) {
@@ -446,6 +465,8 @@ simulationApp.service('DatabaseService', [ '$http',
 	}
 ]);
 
+// This Service send post requests with data to the server, exact to jsonHandler.php,
+// or load data from given json file.
 simulationApp.service('JsonService', [ '$http',
 	function ($http) {
 		this.load = function (file) {
@@ -481,6 +502,23 @@ simulationApp.service('JsonService', [ '$http',
 		};
 	}
 ]);
+
+simulationApp.service('CanvasService', ['VisualizationService', 'SocketGridService', 'HandleGridService', 'JsonService',
+	function (VisualizationService, SocketGridService, HandleGridService, JsonService) {
+		this.draw = function () {
+			var canvas = document.getElementById("canvas");
+			if (canvas.getContext) {
+				var engine = canvas.getContext("2d");
+				VisualizationService.setEngine(engine);
+			}
+
+			JsonService.load('gui').then(function (data) {
+				var grid = data.data;
+				SocketGridService.set_array(grid);
+				HandleGridService.canvas();
+			});
+		}
+	}]);
 
 simulationApp.service('SocketGridService', [
 	function () {
@@ -551,3 +589,21 @@ simulationApp.service('VisualizationService', [
 		}
 	}
 ]);
+
+simulationApp.factory('uuid', function() {
+	var svc = {
+		new: function() {
+			function _p8(s) {
+				var p = (Math.random().toString(16)+"000000000").substr(2,8);
+				return s ? "-" + p.substr(0,4) + "-" + p.substr(4,4) : p ;
+			}
+			return _p8() + _p8(true) + _p8(true) + _p8();
+		},
+
+		empty: function() {
+			return '00000000-0000-0000-0000-000000000000';
+		}
+	};
+
+	return svc;
+});

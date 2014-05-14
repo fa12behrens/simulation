@@ -4,54 +4,35 @@
 
 var simulationApp = angular.module('simulationApp.controllers', []);
 
-simulationApp.controller('CanvasController', ['$scope', 'VisualizationService', 'SocketGridService', 'HandleGridService',
-	function ($scope, VisualizationService, SocketGridService, HandleGridService) {
-
-		var canvas = document.getElementById("canvas");
-		if (canvas.getContext) {
-			var engine = canvas.getContext("2d");
-			VisualizationService.setEngine(engine);
-		}
-
-		var grid = [
-			[1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-			[0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-			[0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-			[0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-			[0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-			[0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-			[0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 5, 1, 1, 1, 0, 0, 0, 0, 0],
-			[0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 1, 4, 1, 1, 8, 1],
-			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0],
-			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-			[0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-			[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6]
-		];
-		SocketGridService.set_array(grid);
-		HandleGridService.canvas();
-
+simulationApp.controller('PreController', ['$scope', 'DatabaseService', 'JsonService',
+	function ($scope, DatabaseService, JsonService) {
+		// Lade das Grid
+		// Baue das Grid und das Grid_logic Array mit den getätigten eingaben zusammen
+		// Speicher das Grid
 	}]);
 
 // This controller starts the Simulator each round.
-simulationApp.controller('RoundController', ['$scope', 'PrepareService', 'DatabaseService', 'JsonService',
-	function ($scope, PrepareService, DatabaseService, JsonService) {
+// It's like the motherboard of our app, which can started and stopped via button.
+// If started, each interval called the intervalJob which doing all the stuff for a round / interval.
+simulationApp.controller('RoundController', ['$scope', 'PrepareService', 'DatabaseService', 'JsonService', 'CanvasService',
+	function ($scope, PrepareService, DatabaseService, JsonService, CanvasService) {
 		var interval;
+		// Set interval to 10 seconds and add intervalJob() to it.
 		$scope.start = function () {
 			interval = setInterval(function () {
 				intervalJob();
 			}, 10000);
 		};
+		// Stop the interval interval.
 		$scope.end = function () {
 			window.clearInterval(interval);
 		};
+		// This function work with the json gui_logic which is a 2 dimensional Array.
+		// A complex chain of actions control:
+		// if the Array[x][x] contains a number over 0, then it's a human_id,
+		// which will used to load the similar human from the database and check which human_type it is.
+		// Each human_type has it's own case and will start their function,
+		// additional functions will called at the end, because they must be called every interval.
 		var intervalJob = function () {
 			JsonService.load('gui_logic').then(function (data) {
 				var logic_array = data.data;
@@ -94,7 +75,6 @@ simulationApp.controller('RoundController', ['$scope', 'PrepareService', 'Databa
 												case 'Customer':
 													var customer_id = temp_id;
 													//PrepareService.prepareGenerateOrder(customer_id);
-													//PrepareService.removeCustomer();
 													break;
 												default:
 											}
@@ -107,7 +87,137 @@ simulationApp.controller('RoundController', ['$scope', 'PrepareService', 'Databa
 				}
 			});
 			//PrepareService.spawnCustomer();
+			//PrepareService.removeCustomer();
 			//PrepareService.buyResources();
-			//var data_array = PrepareService.loadData();
+			//$scope.data_array = PrepareService.loadData();
+			//CanvasService.draw();
 		}
 	}]);
+
+simulationApp.controller('ddController', ['$scope', 'DatabaseService', 'JsonService', 'RngService', function ($scope, DatabaseService, JsonService, RngService) { // function referenced by the drop target
+	var grid = [
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"]
+	];
+	var grid_logic = [
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+		["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"]
+	];
+	var objects = {
+		'green': '4',
+		'red': '8',
+		'blue': '7',
+		'black': '1',
+		'grey': '0',
+		'yellow': '3',
+		'brown': '2',
+		'magenta': '6',
+		'orange': '5'
+	};
+
+	$scope.load = function () {
+		JsonService.load('gui').then(function (data) {
+			grid = data.data;
+		});
+		JsonService.load('gui_logic').then(function (data) {
+			grid_logic = data.data;
+		});
+	};
+	$scope.save = function () {
+			JsonService.overwrite('gui', grid);
+			JsonService.overwrite('gui_logic', grid_logic);
+		};
+	$scope.dropped = function (dragEl, dropEl) {
+		//this is application logic, for the demo we just want to color the grid squares
+		//the directive provides a native dom object, wrap with jqlite
+		var drop = angular.element(dropEl);
+		var drag = angular.element(dragEl);
+
+		//clear the previously applied color, if it exists
+		var bgClass = drop.attr('data-color');
+		if (bgClass) {
+			drop.removeClass(bgClass);
+		}
+
+		//add the dragged color
+		bgClass = drag.attr("data-color");
+		drop.addClass(bgClass);
+		drop.attr('data-color', bgClass);
+
+		var drop_html = drop[0].outerHTML;
+		var drop_splitted = drop_html.split('"', 50);
+		var position = [];
+		var color;
+
+		angular.forEach(drop_splitted, function (value, key) {
+			if (value == ' value=') {
+				position.push(drop_splitted[key + 1]);
+			}
+			if (value == ' data-color=') {
+				color = drop_splitted[key + 1];
+			}
+		});
+
+		if (color !== undefined) {
+			var object = objects[color];
+			if (object == 3 || object == 4 || object == 7) {
+				var human_types = {3:'Customer', 4:'Chef', 7:'Waiter'};
+				var human_type = human_types[object];
+				DatabaseService.special('human', 'loadByType', human_type);
+				setTimeout(function () {
+					JsonService.load('human').then(function (data) {
+						var random_number = RngService.generate(data.data.length, 0);
+						var human_id = data.data[random_number]['id'];
+						grid_logic[position[0] - 1][position[1] - 1] = human_id;
+					});
+				}, 100);
+			}
+			grid[position[0] - 1][position[1] - 1] = object;
+		}
+
+		//if element has been dragged from the grid, clear dragged color
+		if (drag.attr("x-lvl-drop-target")) {
+			drag.removeClass(bgClass);
+		}
+	};
+	$scope.rix = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
+	$scope.cix = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20];
+}]);
+
+

@@ -13,7 +13,6 @@ var simulationApp = angular.module('simulationApp', [
 simulationApp.config(['$routeProvider', function ($routeProvider) {
 	$routeProvider.when('/view1', {templateUrl: 'partials/partial1.html'});
 	$routeProvider.when('/view2', {templateUrl: 'partials/partial2.html'});
-	$routeProvider.when('/view7', {templateUrl: 'partials/partial7.html', controller: 'CanvasController'});
 	$routeProvider.when('/view10', {templateUrl: 'partials/partial10.html', controller: 'RoundController'});
 	$routeProvider.otherwise({redirectTo: '/view1'});
 }]);
