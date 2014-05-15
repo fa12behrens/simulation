@@ -38,7 +38,9 @@ function worker_queue() {
 						worker_finished_counter = 0;
 
 // CALLBACK to controller because the worker are asynchron to the controller order				
+
 						GUIcontroller.synchronized_callback();
+
 // ######################						
 					};
 				}
