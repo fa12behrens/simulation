@@ -19,7 +19,7 @@ function intervall(starting_intervall) {
 				new_grid = socket_grid.get_array();
 
 // too fast for testing, has to be handled by the outside logic then ok
-				//new_grid[object_container[current_walkable].start_x][object_container[current_walkable].start_y] = old_grid[object_container[current_walkable].start_x][object_container[current_walkable].start_y];
+				new_grid[object_container[current_walkable].start_x][object_container[current_walkable].start_y] = old_grid[object_container[current_walkable].start_x][object_container[current_walkable].start_y];
 
 				object_container.set_start_xy(current_walkable,xy_position[0],xy_position[1]);
 				
