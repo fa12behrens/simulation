@@ -1,43 +1,3 @@
-// in this socket the starting positions
-function socket_starting_positions() {
-
-	this.get_current_start_x = function(id) {
-		if (id < 5) {
-			return 0;
-		}
-		else {
-			return 9;
-		};
-	};
-
-	this.get_current_start_y = function(id) {
-		if (id < 5) {
-			return 17;
-		}
-		else {
-			return 1;
-		};
-	};
-
-	this.get_current_end_x = function(id) {
-		if (id < 5) {
-			return 18;
-		}
-		else {
-			return 15;
-		};
-	};
-
-	this.get_current_end_y = function(id) {
-		if (id < 5) {
-			return 1;
-		}
-		else {
-			return 11;
-		};
-	};
-}
-
 /*	The IDs are created dynamically so there must be a default order to keep things simple.
 The order is now that the waiters come first in enumeration and then the customers
 The maximum number of customers will define how much customer objects will be created, with
@@ -57,10 +17,10 @@ function object_container(number_objects,number_waiter,number_customer) {
 // this part has to be generated dynamically depending on start position for every object
 // just a example for the waiter
 			var current_type = this.get_type(single_object);
-			var current_start_x = socket_starting_positions.get_current_start_x(single_object);
-			var current_start_y = socket_starting_positions.get_current_start_y(single_object);
-			var current_end_x = socket_starting_positions.get_current_end_x(single_object);
-			var current_end_y = socket_starting_positions.get_current_end_y(single_object);
+			var current_start_x = 1;
+			var current_start_y = 17;
+			var current_end_x = 15;
+			var current_end_y = 11;
 
 // declares every single object and gets its attributes over the id, path value is only a placeholder
 			object_container[single_object] = {id: single_object, path: [0,0], type: current_type, active: false, start_x: current_start_x, start_y: current_start_y, end_x: current_end_x, end_y: current_end_y};

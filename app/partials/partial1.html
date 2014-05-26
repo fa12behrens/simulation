@@ -1,1 +1,46 @@
-<p>This is the partial for view 1.</p>
+
+	<script src="../old/worker_query/js/prepare_grid.js"></script>
+	<script src="../old/worker_query/js/define_movable_objects.js"></script>
+	<script src="../old/worker_query/js/handle_movable_objects.js"></script>
+	<script src="../old/worker_query/workers/workerbuilder.js"></script>
+	<script src="../old/worker_query/js/canvas_engine.js"></script>
+
+
+<!--preload the images both for explanation and for referencing in canvas-->
+<div onload="draw_visualization();">
+	Koch
+	<img src="img/simulator/cook.png" id="cook_image">
+	Kellner
+	<img src="img/simulator/waiter.png" id="waiter_image">
+	Kunde
+	<img src="img/simulator/customer.png" id="customer_image">
+	Eingang
+	<img src="img/simulator/door.png" id="door_image">
+	Feld
+	<img src="img/simulator/field.png" id="field_image">
+	Herd
+	<img src="img/simulator/kitchen.png" id="kitchen_image">
+	Tisch
+	<img src="img/simulator/table.png" id="table_image">
+	Wand
+	<img src="img/simulator/wall.png" id="wall_image">
+	Lager
+	<img src="img/simulator/storage.png" id="storage_image">
+</div>
+
+<!--style within the canvas tag because canvas has problems with outside css-->
+<div>
+	Canvas Fenster
+	<canvas id="canvas" width="500" height="500" style="border:1px solid #d3d3d3;"></canvas>
+</div>
+
+<script type="text/javascript" src="../old/worker_query/js/guicontroller.js"></script>
+
+
+
+
+
+
+
+
+

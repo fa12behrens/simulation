@@ -94,6 +94,7 @@ CREATE TABLE IF NOT EXISTS `simulator`.`human` (
   `name` VARCHAR(45) NOT NULL,
   `gender` VARCHAR(45) NOT NULL,
   `human_type_id` INT NOT NULL,
+  `path` BIT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_human_human_type1_idx` (`human_type_id` ASC),
   CONSTRAINT `fk_human_human_type1`

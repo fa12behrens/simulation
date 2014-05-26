@@ -98,7 +98,6 @@ simulationApp.service('ChefService', [ 'DatabaseService', 'JsonService',
 							var amount = resource['amount'];
 							amount -= 1;
 							if (amount === 0) {
-
 								DatabaseService.special('resources', 'delete', resource['id']);
 							} else {
 								data = [resource['id'], amount];
@@ -346,11 +345,23 @@ simulationApp.service('PrepareService', ['DatabaseService', 'JsonService', 'Call
 			}, 100);
 		};
 		// Function has a chance of 1 percent to call the generateCustomer
-		this.spawnCustomer = function () {
-			var random_number = RngService.generate(100, 1);
-			if (random_number == 50) {
-				CustomerService.generateCustomer();
-			}
+		this.spawnCustomer = function (limit) {
+			var current_costumers;
+			JsonService.load('gui').then(function (data) {
+				for (var out; out < gui.length; out++) {
+					for (var inner; inner < gui[out].length; inner++) {
+						if (gui[out][inner] == 3) {
+							current_costumers++;
+						}
+					}
+				}
+				if (current_costumers <= limit) {
+					var random_number = RngService.generate(100, 1);
+					if (random_number == 50) {
+						CustomerService.generateCustomer();
+					}
+				}
+			});
 		};
 		// Function checks, if someone stand on the spawn point, if it's a customer,
 		// the CustomerService is called with the customer_id.
@@ -503,6 +514,27 @@ simulationApp.service('JsonService', [ '$http',
 	}
 ]);
 
+// This function is irrelevant for the simulator but without, the drag and drop would not work,
+// because the directives need this id, which is returned in this function.
+simulationApp.factory('uuid', function () {
+	var svc = {
+		new: function () {
+			function _p8(s) {
+				var p = (Math.random().toString(16) + "000000000").substr(2, 8);
+				return s ? "-" + p.substr(0, 4) + "-" + p.substr(4, 4) : p;
+			}
+
+			return _p8() + _p8(true) + _p8(true) + _p8();
+		},
+
+		empty: function () {
+			return '00000000-0000-0000-0000-000000000000';
+		}
+	};
+
+	return svc;
+});
+
 simulationApp.service('CanvasService', ['VisualizationService', 'SocketGridService', 'HandleGridService', 'JsonService',
 	function (VisualizationService, SocketGridService, HandleGridService, JsonService) {
 		this.draw = function () {
@@ -522,7 +554,7 @@ simulationApp.service('CanvasService', ['VisualizationService', 'SocketGridServi
 
 simulationApp.service('SocketGridService', [
 	function () {
-		var canvas_grid = new Array();
+		var canvas_grid = [];
 
 		this.set_array = function (array) {
 			canvas_grid = array;
@@ -548,7 +580,7 @@ simulationApp.service('HandleGridService', ['SocketGridService', 'VisualizationS
 		this.canvas = function () {
 			var max_x = SocketGridService.get_grid_width();
 			var max_y = SocketGridService.get_grid_height();
-			var canvas_array = new Array();
+			var canvas_array = [];
 			canvas_array = SocketGridService.get_array();
 
 			for (var current_width = 0; current_width < max_x; current_width++) {
@@ -573,7 +605,7 @@ simulationApp.service('VisualizationService', [
 		};
 		this.draw_images = function (imageNumber, xPosition, yPosition) {
 //reference to the images and make an array of references to call them
-			var pictures = new Array();
+			var pictures = [];
 
 			pictures[0] = document.getElementById("field_image");
 			pictures[1] = document.getElementById("wall_image");
@@ -590,22 +622,114 @@ simulationApp.service('VisualizationService', [
 	}
 ]);
 
-// This function is irrelevant for the simulator but without, the drag and drop would not work,
-// because the directives need this id, which is returned in this function.
-simulationApp.factory('uuid', function() {
-	var svc = {
-		new: function() {
-			function _p8(s) {
-				var p = (Math.random().toString(16)+"000000000").substr(2,8);
-				return s ? "-" + p.substr(0,4) + "-" + p.substr(4,4) : p ;
-			}
-			return _p8() + _p8(true) + _p8(true) + _p8();
-		},
-
-		empty: function() {
-			return '00000000-0000-0000-0000-000000000000';
+simulationApp.service('DefinePathsService', ['DatabaseService', 'JsonService', 'RngService', 'PlaceAroundService', function (DatabaseService, JsonService, RngService, PlaceAroundService) {
+	this.execute = function (object_container, human, current_out, current_inner) {
+		var id = human['id'];
+		if (human['path'] != 1) {
+			var temp_array = {id: [current_out, current_inner]};
+			object_container.create_content(temp_array);
 		}
-	};
+		var gui = [];
+		var gui_logic = [];
+		JsonService.load('gui').then(
+			function (data) {
+				gui = data.data;
+			}
+		);
+		JsonService.load('gui_logic').then(
+			function (data) {
+				gui_logic = data.data;
+			}
+		);
+		setTimeout(function () {
+				var positions = [];
+				var position;
+				if (human['type'] = 'Waiter') {
+					// wenn kein product und keine bestellung
+					// laufe zu einem kunden, mit offener bestellung, gibt es keinen, dann lauf zum koch
+					if (human['product_id'] == null && human['order_id'] == null) {
+						// Todo: abfragen, ob die kunden eine offene Bestellung haben
+						positions = PlaceAroundService.forLoop(3);
+						position = PlaceAroundService.execute(positions);
+						if (!position[1]) {
+							// wenn position = empty
+							positions = PlaceAroundService.forLoop(4);
+							position = PlaceAroundService.execute(positions);
+						}
+					} else if (human['product_id'] != null) {
+						// wenn product und keine bestellung
+						// laufe ein feld neben einen Kunden mit entsprechender order
+						// Todo: abfragen, ob die order der unden mit dem product übereinstimmt
+						positions = PlaceAroundService.forLoop(3);
+						position = PlaceAroundService.execute(positions);
+					} else if (human['order_id'] != null) {
+						// wenn bestellung und kein product
+						// laufe ein feld neben den koch
 
-	return svc;
-});
+						positions = PlaceAroundService.forLoop(4);
+						position = PlaceAroundService.execute(positions);
+					}
+				}
+				else if (human['type'] = 'Customer') {
+					if (human['order_id'] == null) {
+						// wenn keine bestellung da
+						// zum feld neben random Tisch bewegen
+						positions = PlaceAroundService.forLoop(6);
+						position = PlaceAroundService.execute(positions);
+					} else if (['ordered'] == 0 && ['ordered'] !== null) {
+						// wenn bestellung auf 0
+						// zum Ausgang bewegen
+						position = [1, 1];
+					}
+					// wenn bestellung auf 1 / null
+					// nicht bewegen
+				}
+				var target = {id: [position[0], position[1]]};
+				var object = object_container.create_shit(target);
+				var new_position = [object[id]['current_out'], object[id]['current_inner']];
+				return new_position;
+			}, 100
+		)
+		;
+	};
+}
+])
+;
+
+simulationApp.service('PlaceAroundService', ['RngService', function (RngService) {
+	this.execute = function (positions) {
+		var random_position = RngService.generate(positions.length, 0);
+		var position = positions[random_position];
+		var random_number = RngService.generate(2, 0);
+		if (random_number == 2) {
+			position[0] += 1;
+		}
+		else if (random_number === 1) {
+			position[0] -= 1;
+		}
+		random_number = RngService.generate(2, 0);
+		if (random_number == 2) {
+			position[1] += 1;
+		}
+		else if (random_number === 1) {
+			position[1] -= 1;
+		}
+		if (position[0] == positions[random_position][0] && position[1] == positions[random_position][1]) {
+			position[1] -= 1;
+		}
+		return position;
+	};
+	this.forLoop = function (id) {
+		var positions = [];
+		var out = 0;
+		var inner = 0;
+		for (out; out < gui.length; out++) {
+			for (inner; inner < gui[out].length; inner++) {
+				if (gui[out][inner] == id) {
+					positions.push([out, inner]);
+				}
+			}
+		}
+		return positions;
+	};
+}]);

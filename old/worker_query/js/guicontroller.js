@@ -47,8 +47,11 @@ multiple times (whenever routing is required), so conditions have to be consider
 	};
 
 	this.handle_one_intervall = function() {
+
+		
 		intervall.next_intervall();
-		handle_canvas_grid();	
+		handle_canvas_grid();
+
 	};
 
 	/* after the worker_queue is finished it calls this function to keep the order of operations.
@@ -58,10 +61,9 @@ multiple times (whenever routing is required), so conditions have to be consider
 /* here comes the main logic of the controller, it is important to build it with conditions
 so that it can be called multiply times because while moving it is possible to calculate new paths*/
 		for(var x = 0; x < number_of_intervalls; x++) {
-
-setTimeout(function(){GUIcontroller.controller_callback()}, timeout*x);
-			//GUIcontroller.controller_callback();
+			GUIcontroller.controller_callback();
 		};
+
 	}
 }
 
@@ -76,11 +78,10 @@ var GUIcontroller = new GUIcontroller();
 
 // create 10 movables, including 5 waiters and 5 customers
 
-var num_waiter = 5;
-var num_customer = 5;
+var num_waiter = 1;
+var num_customer = 0;
 var num_sum = num_waiter+num_customer;
 
-var socket_starting_positions = new socket_starting_positions();
 var object_container = new object_container(num_sum,num_waiter,num_customer);
 object_container.create_content();
 
@@ -92,10 +93,10 @@ call_grid_logic();
 old_grid = grid;
 create_astar_grid(grid,false);
 
+
 // initialize worker queue
 var worker_queue = new worker_queue();
 var worker_finished_counter = 0;
 
-var timeout = 150;
-number_of_intervalls = 50;
+var number_of_intervalls = 19;
 GUIcontroller.controller_callback();

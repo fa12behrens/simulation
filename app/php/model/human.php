@@ -15,7 +15,7 @@ class human
 	{
 		switch ($type) {
 			case 'load':
-				$this->sql = "SELECT h.id, h.name, h.gender, ht.type, hho.order_id, o.order_product_type_id, o.ordered, p.creation_time, p.product_type_id,
+				$this->sql = "SELECT h.id, h.name, h.gender, h.path, ht.type, hho.order_id, o.order_product_type_id, o.ordered, p.creation_time, p.product_type_id,
 				pt.ingredients, pt.time_to_cold, pt.price, hhp.product_id
    				FROM `human` h
 			 	INNER JOIN `human_type` ht ON h.human_type_id = ht.id
@@ -27,7 +27,7 @@ class human
 				GROUP BY h.id";
 				break;
 			case 'loadLast':
-				$this->sql = "SELECT h.id, h.name, h.gender, ht.type, hho.order_id, o.order_product_type_id, o.ordered, p.creation_time, p.product_type_id,
+				$this->sql = "SELECT h.id, h.name, h.gender, h.path, ht.type, hho.order_id, o.order_product_type_id, o.ordered, p.creation_time, p.product_type_id,
 				pt.ingredients, pt.time_to_cold, pt.price, hhp.product_id
    				FROM `human` h
 			 	INNER JOIN `human_type` ht ON h.human_type_id = ht.id
@@ -42,7 +42,7 @@ class human
         		1";
 				break;
 			case 'loadById':
-				$this->sql = "SELECT h.id, h.name, h.gender, ht.type, hho.order_id, o.order_product_type_id, o.ordered, p.creation_time, p.product_type_id,
+				$this->sql = "SELECT h.id, h.name, h.gender, h.path, ht.type, hho.order_id, o.order_product_type_id, o.ordered, p.creation_time, p.product_type_id,
 				pt.ingredients, pt.time_to_cold, pt.price, hhp.product_id
 				FROM `human` h
 				INNER JOIN `human_type` ht ON h.human_type_id = ht.id
@@ -55,7 +55,7 @@ class human
 				GROUP BY h.id";
 				break;
 			case 'loadByType':
-				$this->sql = "SELECT h.id, h.name, h.gender, ht.type, hho.order_id, o.order_product_type_id, o.ordered, p.creation_time, p.product_type_id,
+				$this->sql = "SELECT h.id, h.name, h.gender, h.path, ht.type, hho.order_id, o.order_product_type_id, o.ordered, p.creation_time, p.product_type_id,
 				pt.ingredients, pt.time_to_cold, pt.price, hhp.product_id
 				FROM `human` h
 				INNER JOIN `human_type` ht ON h.human_type_id = ht.id
@@ -76,10 +76,11 @@ class human
 								`id`,
 								`name`,
 								`gender`,
-								`human_type_id`
+								`human_type_id`,
+								`path`,
 								)
 								VALUES (
-								NULL ,  '$name', '$gender', $human_type_id)";
+								NULL ,  '$name', '$gender', $human_type_id, NULL)";
 				}
 				break;
 			case 'delete':
