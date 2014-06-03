@@ -27,5 +27,4 @@ function create_astar_grid(grid,only_field_option) {
 	};
 
 	return astar_grid;
-	alert(astar_grid);
 }

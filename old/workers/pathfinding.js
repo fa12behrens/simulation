@@ -29,6 +29,9 @@ self.onmessage = function(event) {
 		    result_array.push([part[1], part[2]]);
 		}
 
+		//result_array.unshift([event.data.start_x,event.data.start_y]);
+
+
 // send the data object back to the main thread
 		event.data.result = result_array;
 		event.data.state = 'finished';
