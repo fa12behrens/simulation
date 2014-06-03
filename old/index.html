@@ -1,54 +1,45 @@
 <!doctype html>
 <html>
-<head>
+	<head>
+		<script src="js/prepare_grid.js"></script>
+		<script src="js/define_movable_objects.js"></script>
+		<script src="js/handle_movable_objects.js"></script>
+		<script src="workers/workerbuilder.js"></script>
+		<script src="js/canvas_engine.js"></script> 
 
-  <script src="data/js/prepare_grid.js"></script>
-  <script src="data/js/canvas_engine.js"></script>
+	</head>
+	<body onload="draw_visualization();">
 
-</head>
-<body onload="draw_visualization();">
+	<!--preload the images both for explanation and for referencing in canvas-->
+	  <div>
+	    Koch
+	    <img src="image/cook.png" id="cook_image">
+	    Kellner
+	    <img src="image/waiter.png" id="waiter_image">
+	    Kunde
+	    <img src="image/customer.png" id="customer_image">
+	    Eingang
+	    <img src="image/door.png" id="door_image">
+	    Feld
+	    <img src="image/field.png" id="field_image">
+	    Herd
+	    <img src="image/kitchen.png" id="kitchen_image">
+	    Tisch
+	    <img src="image/table.png" id="table_image">
+	    Wand
+	    <img src="image/wall.png" id="wall_image">
+	    Lager
+	    <img src="image/storage.png" id="storage_image">
+	  </div>
 
-  <!--preload the images both for explanation and for referencing in canvas-->
-  <div>
-    Koch
-    <img src="data/image/cook.png" id="cook_image">
-    Kellner
-    <img src="data/image/waiter.png" id="waiter_image">
-    Kunde
-    <img src="data/image/customer.png" id="customer_image">
-    Eingang
-    <img src="data/image/door.png" id="door_image">
-    Feld
-    <img src="data/image/field.png" id="field_image">
-    Herd
-    <img src="data/image/kitchen.png" id="kitchen_image">
-    Tisch
-    <img src="data/image/table.png" id="table_image">
-    Wand
-    <img src="data/image/wall.png" id="wall_image">
-    Lager
-    <img src="data/image/storage.png" id="storage_image">
-  </div>
+	  <!--style within the canvas tag because canvas has problems with outside css-->
+	  <div>
+	    Canvas Fenster
+	    <canvas id="canvas" width="500" height="500" style="border:1px solid #d3d3d3;"></canvas>
+	  </div>
 
-  <!--style within the canvas tag because canvas has problems with outside css-->
-  <div>
-    Canvas Fenster
-    <canvas id="canvas" width="500" height="500" style="border:1px solid #d3d3d3;"></canvas>
-  </div>
+		<script type="text/javascript" src="js/guicontroller.js"></script>
 
-
-  <h3>Worker Query Action</h3>
-  <div id="output">paths</div>
-
-  <script type="text/javascript">
-    call_grid_logic();
-
-
-  </script>
-
-
-  <script type="text/javascript" src="data/js/queury.js"></script>
-
-
-</body>
+	</body>
 </html>
+
