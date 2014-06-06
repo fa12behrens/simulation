@@ -1,6 +1,7 @@
 'use strict';
 
 /* Services */
+// old file, includes all services
 
 // Demonstrate how to register services
 // In this case it is a simple value service.
@@ -659,7 +660,7 @@ simulationApp.service('DefinePathsService', ['DatabaseService', 'JsonService', '
 					} else if (human['product_id'] != null) {
 						// wenn product und keine bestellung
 						// laufe ein feld neben einen Kunden mit entsprechender order
-						// Todo: abfragen, ob die order der unden mit dem product übereinstimmt
+						// Todo: abfragen, ob die order der Kunden mit dem product übereinstimmt
 						positions = PlaceAroundService.forLoop(3);
 						position = PlaceAroundService.execute(positions);
 					} else if (human['order_id'] != null) {
