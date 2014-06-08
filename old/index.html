@@ -10,6 +10,8 @@
 	</head>
 	<body onload="draw_visualization();">
 
+<h1>Proof of concept Pathfinding</h1>
+
 	<!--preload the images both for explanation and for referencing in canvas-->
 	  <div>
 	    Koch
@@ -34,11 +36,43 @@
 
 	  <!--style within the canvas tag because canvas has problems with outside css-->
 	  <div>
-	    Canvas Fenster
 	    <canvas id="canvas" width="500" height="500" style="border:1px solid #d3d3d3;"></canvas>
 	  </div>
+	
+	<br>Please enter a target for the waiter</br>
 
-		<script type="text/javascript" src="js/guicontroller.js"></script>
+	<select id="selectNumberX">
+		<option>Choose X-coordinate</option>
+	</select>
+	<select id="selectNumberY">
+		<option>Choose Y-coordinate</option>
+	</select>
+	<button id="start" onclick="main();">start</button>
+	<a href="javascript:location.reload()">reload</a>
+	<br></br>
+
+	<script type="text/javascript" src="js/guicontroller.js"></script>
+	<script type="text/javascript">
+
+	document.getElementById("selectNumberX").defaultValue = 12;
+	document.getElementById("selectNumberY").defaultValue = 14;
+
+	var select = document.getElementById("selectNumberX");
+	add(select);
+	select = document.getElementById("selectNumberY");
+	add(select);
+	
+	function add(select) {
+			for(var i = 1; i < 20; i++) {
+		    var opt = i;
+		    var el = document.createElement("option");
+		    el.textContent = opt;
+		    el.value = opt;
+		    select.appendChild(el);
+		}
+}
+
+	</script>	
 
 	</body>
 </html>
