@@ -16,7 +16,7 @@ multiple times (whenever routing is required), so conditions have to be consider
 				object_container[specific_object].end_x = id_array[specific_object][0];
 				object_container[specific_object].end_y = id_array[specific_object][1];
 			});
-	 	};
+	 	}
 
 	 	worker_queue.create_workers(worker_array);
  	};
@@ -37,14 +37,25 @@ so that it can be called multiply times because while moving it is possible to c
 	setTimeout(function(){intervall.next_intervall()}, timeout*(x+1));
 	setTimeout(function(){handle_canvas_grid()}, timeout*(x+1));
 
-		};
+		}
 	};
-}
+};
 
 
+// Guicontroller inizieren -
+// object_container mit max paths definieren -
+// object_container.create_content mit position -
+// new intervall counter mit 0 erstellen!? -
+// grid und old_astar grid setzen -
+// create astar grid mit grid und false aufrufen -
+// new worker_queue bauen und worker finished counter gleich 1 setzen -
+// timeout und zahl der intervalle festlegen -
+// guicontroller mit make_turn aufrufen -
 
+
+/*
 // create the controller object for callbacks
-var GUIcontroller = new GUIcontroller();
+var GUIcontroller_instance = new GUIcontroller();
 
 var max_length_ID = 10;
 id_array = [];
@@ -94,7 +105,8 @@ number_of_intervalls = 20;
 id_array[1] = [14,12];
 id_array[5] = [19,11];
 
-GUIcontroller.make_turn(id_array);
+GUIcontroller_instance.make_turn(id_array);
 
 // collision prevention		wait when field is blocked
 // return grid && return object_container
+*/

@@ -39,7 +39,7 @@ simulationApp.directive('lvlDraggable', ['$rootScope', 'uuid', function($rootSco
 			angular.element(el).attr("draggable", "true");
 			var id = angular.element(el).attr("id");
 			if (!id) {
-				id = uuid.new()
+				id = uuid.new();
 				angular.element(el).attr("id", id);
 			}
 
@@ -66,7 +66,7 @@ simulationApp.directive('lvlDropTarget', ['$rootScope', 'uuid', function($rootSc
 		link: function(scope, el) {
 			var id = angular.element(el).attr("id");
 			if (!id) {
-				id = uuid.new()
+				id = uuid.new();
 				angular.element(el).attr("id", id);
 			}
 

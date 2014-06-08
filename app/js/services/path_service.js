@@ -11,11 +11,15 @@
 var simulationApp = angular.module('simulationApp.services', []);
 
 simulationApp.service('DefinePathsService', ['DatabaseService', 'JsonService', 'RngService', 'PlaceAroundService', function (DatabaseService, JsonService, RngService, PlaceAroundService) {
-	this.execute = function (object_container, human, current_out, current_inner) {
+	this.execute = function (object_container, human, current_out, current_inner, gui_controller_instance) {
 		var id = human['id'];
 		if (human['path'] != 1) {
 			var temp_array = {id: [current_out, current_inner]};
 			object_container.create_content(temp_array);
+			var intervall = new intervall(0);
+			var astar_grid = create_astar_grid(gui,false);
+			var worker_queue = new worker_queue();
+			var worker_finished_counter = 1;
 		}
 		var gui = [];
 		var gui_logic = [];
@@ -73,7 +77,7 @@ simulationApp.service('DefinePathsService', ['DatabaseService', 'JsonService', '
 					// nicht bewegen
 				}
 				var target = {id: [position[0], position[1]]};
-				var object = object_container.create_shit(target);
+				var object = gui_controller_instance.make_turn(target);
 				var new_position = [object[id]['current_out'], object[id]['current_inner']];
 				return new_position;
 			}, 100

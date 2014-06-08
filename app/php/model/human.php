@@ -83,6 +83,23 @@ class human
 								NULL ,  '$name', '$gender', $human_type_id, NULL)";
 				}
 				break;
+			case 'update_path':
+				$id = $data[0];
+				$value = serialize($data[1]);
+				if ($data !== null) {
+					$this->sql = "UPDATE  `simulator`.`human`
+								SET `path` = '$value'
+								WHERE id = $id";
+				}
+				break;
+			case 'delete_path':
+				$id = $data;
+				if ($data !== null) {
+					$this->sql = "UPDATE  `simulator`.`human`
+								SET `path` = null
+								WHERE id = $id";
+				}
+				break;
 			case 'delete':
 				$id = $data;
 				$this->sql = "DELETE FROM `human`

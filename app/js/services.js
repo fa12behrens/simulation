@@ -268,12 +268,12 @@ simulationApp.service('PrepareService', ['DatabaseService', 'JsonService', 'Call
 		// It loads the data by using the defined api and  the timeouts tell js to wait for the server.
 		// function expect waiter_id and human_id
 		this.execute = function (waiter_id, human_id) {
-			DatabaseService.loadById(table_name, waiter_id);
+			DatabaseService.special(table_name, 'loadById', waiter_id);
 			setTimeout(function () {
 				JsonService.load(table_name).then(function (data) {
 					waiter = data.data;
 				});
-				DatabaseService.loadById(table_name, human_id);
+				DatabaseService.special(table_name, 'loadById' ,human_id);
 				setTimeout(function () {
 					JsonService.load(table_name).then(function (data) {
 						human = data.data;
@@ -349,6 +349,7 @@ simulationApp.service('PrepareService', ['DatabaseService', 'JsonService', 'Call
 		this.spawnCustomer = function (limit) {
 			var current_costumers;
 			JsonService.load('gui').then(function (data) {
+				var gui = data.data;
 				for (var out; out < gui.length; out++) {
 					for (var inner; inner < gui[out].length; inner++) {
 						if (gui[out][inner] == 3) {
@@ -623,13 +624,9 @@ simulationApp.service('VisualizationService', [
 	}
 ]);
 
-simulationApp.service('DefinePathsService', ['DatabaseService', 'JsonService', 'RngService', 'PlaceAroundService', function (DatabaseService, JsonService, RngService, PlaceAroundService) {
-	this.execute = function (object_container, human, current_out, current_inner) {
+simulationApp.service('DefinePathsService', ['DatabaseService', 'JsonService', 'RngService', 'PlaceAroundService', 'PathfindingService', function (DatabaseService, JsonService, RngService, PlaceAroundService, PathfindingService) {
+	this.execute = function (human, current_out, current_inner) {
 		var id = human['id'];
-		if (human['path'] != 1) {
-			var temp_array = {id: [current_out, current_inner]};
-			object_container.create_content(temp_array);
-		}
 		var gui = [];
 		var gui_logic = [];
 		JsonService.load('gui').then(
@@ -642,57 +639,61 @@ simulationApp.service('DefinePathsService', ['DatabaseService', 'JsonService', '
 				gui_logic = data.data;
 			}
 		);
-		setTimeout(function () {
-				var positions = [];
-				var position;
-				if (human['type'] = 'Waiter') {
-					// wenn kein product und keine bestellung
-					// laufe zu einem kunden, mit offener bestellung, gibt es keinen, dann lauf zum koch
-					if (human['product_id'] == null && human['order_id'] == null) {
-						// Todo: abfragen, ob die kunden eine offene Bestellung haben
-						positions = PlaceAroundService.forLoop(3);
-						position = PlaceAroundService.execute(positions);
-						if (!position[1]) {
-							// wenn position = empty
-							positions = PlaceAroundService.forLoop(4);
+		if (human['path'] == null) {
+			var temp_array = [current_out, current_inner];
+			setTimeout(function () {
+					var positions = [];
+					var position;
+					if (human['type'] = 'Waiter') {
+						// wenn kein product und keine bestellung
+						// laufe zu einem kunden, mit offener bestellung, gibt es keinen, dann lauf zum koch
+						if (human['product_id'] == null && human['order_id'] == null) {
+							// Todo: abfragen, ob die kunden eine offene Bestellung haben
+							positions = PlaceAroundService.forLoop(3, gui);
+							position = PlaceAroundService.execute(positions);
+							if (!position[1]) {
+								// wenn position = empty
+								positions = PlaceAroundService.forLoop(4, gui);
+								position = PlaceAroundService.execute(positions);
+							}
+						} else if (human['product_id'] != null) {
+							// wenn product und keine bestellung
+							// laufe ein feld neben einen Kunden mit entsprechender order
+							// Todo: abfragen, ob die order der Kunden mit dem product übereinstimmt
+							positions = PlaceAroundService.forLoop(3, gui);
+							position = PlaceAroundService.execute(positions);
+						} else if (human['order_id'] != null) {
+							// wenn bestellung und kein product
+							// laufe ein feld neben den koch
+
+							positions = PlaceAroundService.forLoop(4, gui);
 							position = PlaceAroundService.execute(positions);
 						}
-					} else if (human['product_id'] != null) {
-						// wenn product und keine bestellung
-						// laufe ein feld neben einen Kunden mit entsprechender order
-						// Todo: abfragen, ob die order der Kunden mit dem product übereinstimmt
-						positions = PlaceAroundService.forLoop(3);
-						position = PlaceAroundService.execute(positions);
-					} else if (human['order_id'] != null) {
-						// wenn bestellung und kein product
-						// laufe ein feld neben den koch
-
-						positions = PlaceAroundService.forLoop(4);
-						position = PlaceAroundService.execute(positions);
 					}
-				}
-				else if (human['type'] = 'Customer') {
-					if (human['order_id'] == null) {
-						// wenn keine bestellung da
-						// zum feld neben random Tisch bewegen
-						positions = PlaceAroundService.forLoop(6);
-						position = PlaceAroundService.execute(positions);
-					} else if (['ordered'] == 0 && ['ordered'] !== null) {
-						// wenn bestellung auf 0
-						// zum Ausgang bewegen
-						position = [1, 1];
+					else if (human['type'] = 'Customer') {
+						if (human['order_id'] == null) {
+							// wenn keine bestellung da
+							// zum feld neben random Tisch bewegen
+							positions = PlaceAroundService.forLoop(6, gui);
+							position = PlaceAroundService.execute(positions);
+						} else if (['ordered'] == 0 && ['ordered'] !== null) {
+							// wenn bestellung auf 0
+							// zum Ausgang bewegen
+							position = [1, 1];
+						}
+						// wenn bestellung auf 1 / null
+						// nicht bewegen
 					}
-					// wenn bestellung auf 1 / null
-					// nicht bewegen
-				}
-				var target = {id: [position[0], position[1]]};
-				var object = object_container.create_shit(target);
-				var new_position = [object[id]['current_out'], object[id]['current_inner']];
-				return new_position;
-			}, 100
-		)
-		;
-	};
+					var target = [position[0], position[1]];
+					PathfindingService.firstTurn(target, temp_array, id);
+				}, 100
+			)
+			;
+		}
+		else {
+			PathfindingService.makeTurn(human, gui, gui_logic);
+		}
+	}
 }
 ])
 ;
@@ -720,11 +721,11 @@ simulationApp.service('PlaceAroundService', ['RngService', function (RngService)
 		}
 		return position;
 	};
-	this.forLoop = function (id) {
+	this.forLoop = function (id, gui) {
 		var positions = [];
 		var out = 0;
-		var inner = 0;
 		for (out; out < gui.length; out++) {
+			var inner = 0;
 			for (inner; inner < gui[out].length; inner++) {
 				if (gui[out][inner] == id) {
 					positions.push([out, inner]);
@@ -732,5 +733,139 @@ simulationApp.service('PlaceAroundService', ['RngService', function (RngService)
 			}
 		}
 		return positions;
+	};
+}]);
+
+simulationApp.service('PathfindingService', ['JsonService', 'DatabaseService', function (JsonService, DatabaseService) {
+	this.firstTurn = function (target, current) {
+		var empty_array = [
+			["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+			["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+			["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+			["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+			["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+			["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+			["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+			["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+			["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+			["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+			["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+			["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+			["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+			["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+			["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+			["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+			["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+			["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+			["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
+			["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"]
+		];
+		empty_array[target[0]][target[1]] = 3;
+		empty_array[current[0]][current[1]] = 2;
+		// save into db
+
+	};
+	this.makeTurn = function (human, gui, gui_logic) {
+		var path = human['path'];
+		var id = human['id'];
+		var current;
+		var target;
+		for (var i = 0; i < path.length; i++) {
+			if (path[i].indexOf(2) != -1) {
+				current = [i, path[i].indexOf(2)];
+			}
+			if (path[i].indexOf(3) != -1) {
+				target = [i, path[i].indexOf(3)];
+			}
+		}
+		var difference = [(target[0] - current[0]), (target[1] - current[1])];
+		var x;
+		var y;
+		if (!(difference[0] == 0 && difference[1] == 0)) {
+			if (difference[0] > 0) {
+				x = 1;
+			}
+			else if (difference[0] < 0) {
+				x = -1;
+			}
+			else {
+				x = 0;
+			}
+			if (difference[1] > 0) {
+				y = 1;
+			}
+			else if (difference[1] < 0) {
+				y = -1;
+			}
+			else {
+				y = 0;
+			}
+			if (gui[current[0] + x][current[1] + y] == 0 && path[current[0] + x][current[1] + y] == 0) {
+				gui[current[0] + x][current[1] + y] = gui[current[0]][current[1]];
+				gui[current[0]][current[1]] = 0;
+				gui_logic[current[0] + x][current[1] + y] = gui_logic[current[0]][current[1]];
+				gui_logic[current[0]][current[1]] = 0;
+				path[current[0] + x][current[1] + y] = path[current[0]][current[1]];
+				path[current[0]][current[1]] = 1;
+				this.saveArray(gui, gui_logic, path, id);
+			}
+			else if (gui[current[0] + x][current[1]] == 0 && path[current[0] + x][current[1]] == 0) {
+				gui[current[0] + x][current[1]] = gui[current[0]][current[1]];
+				gui[current[0]][current[1]] = 0;
+				gui_logic[current[0] + x][current[1]] = gui_logic[current[0]][current[1]];
+				gui_logic[current[0]][current[1]] = 0;
+				path[current[0] + x][current[1]] = path[current[0]][current[1]];
+				path[current[0]][current[1]] = 1;
+				this.saveArray(gui, gui_logic, path, id);
+			}
+			else if (gui[current[0]][current[1] + y] == 0 && path[current[0]][current[1] + y] == 0) {
+				gui[current[0]][current[1] + y] = gui[current[0]][current[1]];
+				gui[current[0]][current[1]] = 0;
+				gui_logic[current[0]][current[1] + y] = gui_logic[current[0]][current[1]];
+				gui_logic[current[0]][current[1]] = 0;
+				path[current[0]][current[1] + y] = path[current[0]][current[1]];
+				path[current[0]][current[1]] = 1;
+				this.saveArray(gui, gui_logic, path, id);
+			}
+			else if (gui[current[0]][current[1] - y] == 0 && path[current[0]][current[1] - y] == 0) {
+				gui[current[0]][current[1] - y] = gui[current[0]][current[1]];
+				gui[current[0]][current[1]] = 0;
+				gui_logic[current[0]][current[1] - y] = gui_logic[current[0]][current[1]];
+				gui_logic[current[0]][current[1]] = 0;
+				path[current[0]][current[1] - y] = path[current[0]][current[1]];
+				path[current[0]][current[1]] = 1;
+				this.saveArray(gui, gui_logic, path, id);
+			}
+			else if (gui[current[0] - x][current[1]] == 0 && path[current[0] - x][current[1]] == 0) {
+				gui[current[0] - x][current[1]] = gui[current[0]][current[1]];
+				gui[current[0]][current[1]] = 0;
+				gui_logic[current[0] - x][current[1]] = gui_logic[current[0]][current[1]];
+				gui_logic[current[0]][current[1]] = 0;
+				path[current[0] - x][current[1]] = path[current[0]][current[1]];
+				path[current[0]][current[1]] = 1;
+				this.saveArray(gui, gui_logic, path, id);
+			}
+			else if (gui[current[0] - x][current[1] - y] == 0 && path[current[0] - x][current[1] - y] == 0) {
+				gui[current[0] - x][current[1] - y] = gui[current[0]][current[1]];
+				gui[current[0]][current[1]] = 0;
+				gui_logic[current[0] - x][current[1] - y] = gui_logic[current[0]][current[1]];
+				gui_logic[current[0]][current[1]] = 0;
+				path[current[0] - x][current[1] - y] = path[current[0]][current[1]];
+				path[current[0]][current[1]] = 1;
+				this.saveArray(gui, gui_logic, path, id);
+			}
+		} else{
+			this.deletePath(id);
+		}
+	};
+	this.saveArray = function (gui, gui_logic, path, id) {
+		JsonService.overwrite('gui', gui);
+		JsonService.overwrite('gui_logic', gui_logic);
+		var data = [id, path];
+		DatabaseService.special('human', 'update_path', data);
+	};
+	this.deletePath = function (id) {
+		var data = id;
+		DatabaseService.special('human', 'delete_path', data);
 	};
 }]);

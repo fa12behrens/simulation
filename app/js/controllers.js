@@ -11,11 +11,8 @@ var simulationApp = angular.module('simulationApp.controllers', []);
 simulationApp.controller('RoundController', ['$scope', 'PrepareService', 'DatabaseService', 'JsonService', 'CanvasService', 'DefinePathsService',
 	function ($scope, PrepareService, DatabaseService, JsonService, CanvasService, DefinePathsService) {
 		var interval;
-		var max = 20;
-		var object_container;
 		// Set interval to 10 seconds and add intervalJob() to it.
 		$scope.start = function () {
-			object_container = new object_container(max);
 			interval = setInterval(function () {
 				intervalJob();
 			}, 10000);
@@ -65,7 +62,7 @@ simulationApp.controller('RoundController', ['$scope', 'PrepareService', 'Databa
 															PrepareService.execute(waiter_id, human_id);
 														}
 													});
-													DefinePathsService.execute(object_container, human, out, inner);
+													DefinePathsService.execute(human, out, inner);
 													break;
 												case 'Chef':
 													var chef_id = temp_id;
@@ -79,7 +76,7 @@ simulationApp.controller('RoundController', ['$scope', 'PrepareService', 'Databa
 																PrepareService.prepareGenerateOrder(customer_id);
 															}
 														});
-														DefinePathsService.execute(object_container, human, out, inner);
+														DefinePathsService.execute(human, out, inner);
 													});
 													break;
 												default:
@@ -207,6 +204,7 @@ simulationApp.controller('PreController', ['$scope', 'DatabaseService', 'JsonSer
 				}, 100);
 			}
 			grid[position[0] - 1][position[1] - 1] = object;
+			alert(object);
 		}
 
 		//if element has been dragged from the grid, clear dragged color

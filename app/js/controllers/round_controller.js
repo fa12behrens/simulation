@@ -16,6 +16,7 @@ simulationApp.controller('RoundController', ['$scope', 'PrepareService', 'Databa
 		var interval;
 		var max = 20;
 		var object_container;
+		var gui_controller_instance = new GUIcontroller();
 		// Set interval to 10 seconds and add intervalJob() to it.
 		$scope.start = function () {
 			object_container = new object_container(max);
@@ -68,7 +69,7 @@ simulationApp.controller('RoundController', ['$scope', 'PrepareService', 'Databa
 															PrepareService.execute(waiter_id, human_id);
 														}
 													});
-													DefinePathsService.execute(object_container, human, out, inner);
+													DefinePathsService.execute(object_container, human, out, inner, gui_controller_instance);
 													break;
 												case 'Chef':
 													var chef_id = temp_id;
@@ -82,7 +83,7 @@ simulationApp.controller('RoundController', ['$scope', 'PrepareService', 'Databa
 																PrepareService.prepareGenerateOrder(customer_id);
 															}
 														});
-														DefinePathsService.execute(object_container, human, out, inner);
+														DefinePathsService.execute(object_container, human, out, inner, gui_controller_instance);
 													});
 													break;
 												default:
