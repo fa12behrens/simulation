@@ -92,7 +92,7 @@ ENGINE = InnoDB;
 CREATE TABLE IF NOT EXISTS `simulator`.`human` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
-  `gender` VARCHAR(45) NOT NULL,
+  `gender` TEXT(3000) NOT NULL,
   `human_type_id` INT NOT NULL,
   `path` VARCHAR(255) NULL,
   PRIMARY KEY (`id`),

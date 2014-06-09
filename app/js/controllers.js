@@ -57,9 +57,11 @@ simulationApp.controller('RoundController', ['$scope', 'PrepareService', 'Databa
 												case 'Waiter':
 													var waiter_id = temp_id;
 													angular.forEach(algo, function (value, key) {
-														if (logic_array[value[0]][value[1]] != 0) {
-															var human_id = logic_array[value[0]][value[1]];
-															PrepareService.execute(waiter_id, human_id);
+														if (value[0] >= 1 && value[1] >= 1 && value[0] <= 18 && value[1] <= 18) {
+															if (logic_array[value[0]][value[1]] != 0) {
+																var human_id = logic_array[value[0]][value[1]];
+																PrepareService.execute(waiter_id, human_id);
+															}
 														}
 													});
 													DefinePathsService.execute(human, out, inner);
@@ -72,8 +74,10 @@ simulationApp.controller('RoundController', ['$scope', 'PrepareService', 'Databa
 													var customer_id = temp_id;
 													JsonService.load('gui').then(function (data) {
 														angular.forEach(algo, function (value, key) {
-															if (data.data[value[0]][value[1]] == 6) {
-																PrepareService.prepareGenerateOrder(customer_id);
+															if (value[0] >= 1 && value[1] >= 1 && value[0] <= 18 && value[1] <= 18) {
+																if (data.data[value[0]][value[1]] == 6) {
+																	PrepareService.prepareGenerateOrder(customer_id);
+																}
 															}
 														});
 														DefinePathsService.execute(human, out, inner);
@@ -204,7 +208,6 @@ simulationApp.controller('PreController', ['$scope', 'DatabaseService', 'JsonSer
 				}, 100);
 			}
 			grid[position[0] - 1][position[1] - 1] = object;
-			alert(object);
 		}
 
 		//if element has been dragged from the grid, clear dragged color

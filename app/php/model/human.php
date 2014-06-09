@@ -85,7 +85,7 @@ class human
 				break;
 			case 'update_path':
 				$id = $data[0];
-				$value = serialize($data[1]);
+				$value = json_encode($data[1]);
 				if ($data !== null) {
 					$this->sql = "UPDATE  `simulator`.`human`
 								SET `path` = '$value'
