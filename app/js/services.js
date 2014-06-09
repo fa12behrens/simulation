@@ -644,57 +644,63 @@ simulationApp.service('DefinePathsService', ['DatabaseService', 'JsonService', '
 		// nicht ein feld daneben, da das pathfinding eh nicht drauf geht, aber das delete parts muss dann auch geändert werden
 		if (human['path'] == null) {
 			var temp_array = [current_out, current_inner];
-			setTimeout(function () {
-				var positions = [];
-				var position;
-				if (human['type'] = 'Waiter') {
-					// wenn kein product und keine bestellung
-					// laufe zu einem kunden, mit offener bestellung, gibt es keinen, dann lauf zum koch
-					if (human['product_id'] == null && human['order_id'] == null) {
-						// Todo: abfragen, ob die kunden eine offene Bestellung haben
-						positions = PlaceAroundService.forLoop(3, gui);
-						position = PlaceAroundService.execute(positions);
-						if (!position[1]) {
-							// wenn position = empty
+			setTimeout(function (human) {
+				return function () {
+					var positions = [];
+					var position;
+					if (human['type'] == 'Customer') {
+						if (human['order_id'] == null) {
+							// wenn keine bestellung da
+							// zum feld neben random Tisch bewegen
+							positions = PlaceAroundService.forLoop(6, gui);
+							position = PlaceAroundService.execute(positions);
+						} else if (['ordered'] == 0 && ['ordered'] !== null) {
+							// wenn bestellung auf 0
+							// zum Ausgang bewegen
+							position = [1, 1];
+						}
+						// wenn bestellung auf 1 / null
+						// nicht bewegen
+					}
+					else if (human['type'] == 'Waiter') {
+						// wenn kein product und keine bestellung
+						// laufe zu einem kunden, mit offener bestellung, gibt es keinen, dann lauf zum koch
+						if (human['product_id'] == null && human['order_id'] == null) {
+							// Todo: abfragen, ob die kunden eine offene Bestellung haben
+							positions = PlaceAroundService.forLoop(3, gui);
+							position = PlaceAroundService.execute(positions);
+							if (!position[1]) {
+								// wenn position = empty
+								positions = PlaceAroundService.forLoop(4, gui);
+								position = PlaceAroundService.execute(positions);
+							}
+						} else if (human['product_id'] != null) {
+							// wenn product und keine bestellung
+							// laufe ein feld neben einen Kunden mit entsprechender order
+							// Todo: abfragen, ob die order der Kunden mit dem product übereinstimmt
+							positions = PlaceAroundService.forLoop(3, gui);
+							position = PlaceAroundService.execute(positions);
+						} else if (human['order_id'] != null) {
+							// wenn bestellung und kein product
+							// laufe ein feld neben den koch
+
 							positions = PlaceAroundService.forLoop(4, gui);
 							position = PlaceAroundService.execute(positions);
 						}
-					} else if (human['product_id'] != null) {
-						// wenn product und keine bestellung
-						// laufe ein feld neben einen Kunden mit entsprechender order
-						// Todo: abfragen, ob die order der Kunden mit dem product übereinstimmt
-						positions = PlaceAroundService.forLoop(3, gui);
-						position = PlaceAroundService.execute(positions);
-					} else if (human['order_id'] != null) {
-						// wenn bestellung und kein product
-						// laufe ein feld neben den koch
-
-						positions = PlaceAroundService.forLoop(4, gui);
-						position = PlaceAroundService.execute(positions);
+					}
+					if (angular.isArray(position)){
+					var target = [position[0], position[1]];
+					PathfindingService.firstTurn(target, temp_array, id);
 					}
 				}
-				else if (human['type'] = 'Customer') {
-					if (human['order_id'] == null) {
-						// wenn keine bestellung da
-						// zum feld neben random Tisch bewegen
-						positions = PlaceAroundService.forLoop(6, gui);
-						position = PlaceAroundService.execute(positions);
-					} else if (['ordered'] == 0 && ['ordered'] !== null) {
-						// wenn bestellung auf 0
-						// zum Ausgang bewegen
-						position = [1, 1];
-					}
-					// wenn bestellung auf 1 / null
-					// nicht bewegen
-				}
-				var target = [position[0], position[1]];
-				PathfindingService.firstTurn(target, temp_array, id);
-			}, 100);
+			}(human), 50);
 		}
 		else {
-			setTimeout(function () {
-				PathfindingService.makeTurn(human, gui, gui_logic);
-			}, 100);
+			setTimeout(function (human) {
+				return function () {
+					PathfindingService.makeTurn(human, gui, gui_logic);
+				}
+			}(human), 100);
 		}
 	}
 }
@@ -705,28 +711,31 @@ simulationApp.service('PlaceAroundService', ['RngService', function (RngService)
 	this.execute = function (positions) {
 		var random_position = RngService.generate(positions.length, 0);
 		var position = positions[random_position];
-		var random_number = RngService.generate(2, 0);
+		/*
+		 var random_number = RngService.generate(2, 0);
 
-		if (random_number == 2) {
-			position[0] += 1;
-		}
-		else if (random_number === 1) {
-			position[0] -= 1;
-		}
-		random_number = RngService.generate(2, 0);
-		if (random_number == 2) {
-			position[1] += 1;
-		}
-		else if (random_number === 1) {
-			position[1] -= 1;
-		}
-		if (position[0] == positions[random_position][0] && position[1] == positions[random_position][1]) {
-			position[1] -= 1;
-		}
-		if (position[0] >= 1 && position[1] >= 1 && position[0] <= 18 && position[1] <= 18) {
-			return position;
-		}
-		this.execute(positions);
+		 if (random_number == 2) {
+		 position[0] += 1;
+		 }
+		 else if (random_number === 1) {
+		 position[0] -= 1;
+		 }
+		 random_number = RngService.generate(2, 0);
+		 if (random_number == 2) {
+		 position[1] += 1;
+		 }
+		 else if (random_number === 1) {
+		 position[1] -= 1;
+		 }
+		 if (position[0] == positions[random_position][0] && position[1] == positions[random_position][1]) {
+		 position[1] -= 1;
+		 }
+		 if (position[0] >= 1 && position[1] >= 1 && position[0] <= 18 && position[1] <= 18) {
+		 return position;
+		 }
+		 this.execute(positions);
+		 */
+		return position;
 	};
 	this.forLoop = function (id, gui) {
 		var positions = [];
@@ -787,11 +796,10 @@ simulationApp.service('PathfindingService', ['JsonService', 'DatabaseService', f
 				target = [i, path[i].indexOf(3)];
 			}
 		}
-		console.log(current, target);
 		var difference = [(target[0] - current[0]), (target[1] - current[1])];
 		var x;
 		var y;
-		if (!(difference[0] == 0 && difference[1] == 0)) {
+		if (difference[0] > 1 || difference[1] > 1) {
 			if (difference[0] > 0) {
 				x = 1;
 			}
@@ -810,6 +818,7 @@ simulationApp.service('PathfindingService', ['JsonService', 'DatabaseService', f
 			else {
 				y = 0;
 			}
+			console.log(current, x, y, difference);
 			if (gui[current[0] + x][current[1] + y] == 0 && path[current[0] + x][current[1] + y] == 0) {
 				gui[current[0] + x][current[1] + y] = gui[current[0]][current[1]];
 				gui[current[0]][current[1]] = 0;
@@ -861,6 +870,15 @@ simulationApp.service('PathfindingService', ['JsonService', 'DatabaseService', f
 				gui_logic[current[0] - x][current[1] - y] = gui_logic[current[0]][current[1]];
 				gui_logic[current[0]][current[1]] = 0;
 				path[current[0] - x][current[1] - y] = path[current[0]][current[1]];
+				path[current[0]][current[1]] = 1;
+				this.saveArray(gui, gui_logic, path, id);
+			}
+			else if (gui[current[0] + 1][current[1]] == 0 && path[current[0] + 1][current[1]] == 0) {
+				gui[current[0] - 1][current[1]] = gui[current[0]][current[1]];
+				gui[current[0]][current[1]] = 0;
+				gui_logic[current[0] - 1][current[1]] = gui_logic[current[0]][current[1]];
+				gui_logic[current[0]][current[1]] = 0;
+				path[current[0] - 1][current[1]] = path[current[0]][current[1]];
 				path[current[0]][current[1]] = 1;
 				this.saveArray(gui, gui_logic, path, id);
 			}
