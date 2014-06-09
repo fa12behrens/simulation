@@ -26,7 +26,8 @@ simulationApp.controller('RoundController', ['$scope', 'PrepareService', 'Databa
 		// if the Array[x][x] contains a number over 0, then it's a human_id,
 		// which will used to load the similar human from the database and check which human_type it is.
 		// Each human_type has it's own case and will start their function,
-		// additional functions will called at the end, because they must be called every interval.
+		// remember the define paths (the path finding) will start here too.
+		// Additional functions will called at the end, because they must be called every interval.
 		var intervalJob = function () {
 			JsonService.load('gui_logic').then(function (data) {
 				var logic_array = data.data;
@@ -88,7 +89,7 @@ simulationApp.controller('RoundController', ['$scope', 'PrepareService', 'Databa
 												default:
 											}
 										});
-									}, 50);
+									}, 100);
 								}
 							}(temp_id, out, inner), timeout)
 						}

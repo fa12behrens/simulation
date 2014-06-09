@@ -1,1 +1,1 @@
-[{"id":"3","name":"Alice","gender":"female","path":null,"type":"Chef","order_id":null,"order_product_type_id":null,"ordered":null,"creation_time":null,"product_type_id":null,"ingredients":null,"time_to_cold":null,"price":null,"product_id":null}]
+[{"id":"23","name":"Sara","gender":"female","path":null,"type":"Customer","order_id":null,"order_product_type_id":null,"ordered":null,"creation_time":"2014-06-09 16:33:40","product_type_id":"2","ingredients":"fleisch","time_to_cold":"00:05:00","price":"15","product_id":"22"}]

@@ -537,6 +537,7 @@ simulationApp.factory('uuid', function () {
 	return svc;
 });
 
+// This Service is the core of canvas initiate the context and start all other components.
 simulationApp.service('CanvasService', ['VisualizationService', 'SocketGridService', 'HandleGridService', 'JsonService',
 	function (VisualizationService, SocketGridService, HandleGridService, JsonService) {
 		this.draw = function () {
@@ -553,7 +554,7 @@ simulationApp.service('CanvasService', ['VisualizationService', 'SocketGridServi
 			});
 		}
 	}]);
-
+// This Service is holding the canvas_grid and the specific getter and setter.
 simulationApp.service('SocketGridService', [
 	function () {
 		var canvas_grid = [];
@@ -574,9 +575,8 @@ simulationApp.service('SocketGridService', [
 			return canvas_grid.length;
 		}
 	}
-])
-;
-
+]);
+// This service start the visualisation for every object in the max x/y.
 simulationApp.service('HandleGridService', ['SocketGridService', 'VisualizationService',
 	function (SocketGridService, VisualizationService) {
 		this.canvas = function () {
@@ -598,7 +598,7 @@ simulationApp.service('HandleGridService', ['SocketGridService', 'VisualizationS
 		}
 	}
 ]);
-
+// This service controls which images match which id, it use the 2d engine and draw the final canvas gui.
 simulationApp.service('VisualizationService', [
 	function () {
 		var current_engine;
@@ -606,7 +606,7 @@ simulationApp.service('VisualizationService', [
 			current_engine = engine;
 		};
 		this.draw_images = function (imageNumber, xPosition, yPosition) {
-//reference to the images and make an array of references to call them
+			//reference to the images and make an array of references to call them
 			var pictures = [];
 
 			pictures[0] = document.getElementById("field_image");
@@ -618,12 +618,14 @@ simulationApp.service('VisualizationService', [
 			pictures[6] = document.getElementById("table_image");
 			pictures[7] = document.getElementById("waiter_image");
 			pictures[8] = document.getElementById("storage_image");
-//drawing the single objects
+			//drawing the single objects
 			current_engine.drawImage(pictures[imageNumber], xPosition, yPosition);
 		}
 	}
 ]);
-
+// This Service is called by the RoundController it expect the human object and the current position.
+// It load the gui and the gui_logik array, if the human has no path, several querys check conditions and decide the correct path,
+// with this path starts the first_turn from pathfinding. If the human has a path, it just start the pathfinding make_turn.
 simulationApp.service('DefinePathsService', ['DatabaseService', 'JsonService', 'RngService', 'PlaceAroundService', 'PathfindingService', function (DatabaseService, JsonService, RngService, PlaceAroundService, PathfindingService) {
 	this.execute = function (human, current_out, current_inner) {
 		var id = human['id'];
@@ -647,21 +649,14 @@ simulationApp.service('DefinePathsService', ['DatabaseService', 'JsonService', '
 					var position;
 					if (human['type'] == 'Customer') {
 						if (human['order_id'] == null) {
-							// wenn keine bestellung da
-							// zum feld neben random Tisch bewegen
 							positions = PlaceAroundService.forLoop(6, gui);
 							position = PlaceAroundService.execute(positions);
 						} else if (['ordered'] == 0 && ['ordered'] !== null) {
-							// wenn bestellung auf 0
-							// zum Ausgang bewegen
+							// Todo: a dynamic spawnpoint
 							position = [1, 1];
 						}
-						// wenn bestellung auf 1 / null
-						// nicht bewegen
 					}
 					else if (human['type'] == 'Waiter') {
-						// wenn kein product und keine bestellung
-						// laufe zu einem kunden, mit offener bestellung, gibt es keinen, dann lauf zum koch
 						if (human['product_id'] == null && human['order_id'] == null) {
 							// Todo: abfragen, ob die kunden eine offene Bestellung haben
 							positions = PlaceAroundService.forLoop(3, gui);
@@ -672,15 +667,10 @@ simulationApp.service('DefinePathsService', ['DatabaseService', 'JsonService', '
 								position = PlaceAroundService.execute(positions);
 							}
 						} else if (human['product_id'] != null) {
-							// wenn product und keine bestellung
-							// laufe ein feld neben einen Kunden mit entsprechender order
 							// Todo: abfragen, ob die order der Kunden mit dem product übereinstimmt
 							positions = PlaceAroundService.forLoop(3, gui);
 							position = PlaceAroundService.execute(positions);
 						} else if (human['order_id'] != null) {
-							// wenn bestellung und kein product
-							// laufe ein feld neben den koch
-
 							positions = PlaceAroundService.forLoop(4, gui);
 							position = PlaceAroundService.execute(positions);
 						}
@@ -701,13 +691,14 @@ simulationApp.service('DefinePathsService', ['DatabaseService', 'JsonService', '
 		}
 	}
 }
-])
-;
-
+]);
+// This service duty is to find and decide which positions must be used.
 simulationApp.service('PlaceAroundService', ['RngService', function (RngService) {
+	// Choose a random position where to go and retrun this position.
 	this.execute = function (positions) {
 		var random_position = RngService.generate(positions.length, 0);
 		var position = positions[random_position];
+		// not needed in the current version
 		/*
 		 var random_number = RngService.generate(2, 0);
 
@@ -734,6 +725,7 @@ simulationApp.service('PlaceAroundService', ['RngService', function (RngService)
 		 */
 		return position;
 	};
+	// Search in the array after the given number and return all matches
 	this.forLoop = function (id, gui) {
 		var positions = [];
 		var out = 0;
@@ -748,8 +740,12 @@ simulationApp.service('PlaceAroundService', ['RngService', function (RngService)
 		return positions;
 	};
 }]);
-
+// The pathfinding works with the path, gui and gui_logic array, the first turn just creates the path array (with
+// 0 empty, 1 already walked, 2 current and 3 target) and save it into the Database.
+// The makeTurn function provides the real pathfinding, it calculate the difference between the target and the current
+// position, with this difference and the given arrays it can decide which position is next.
 simulationApp.service('PathfindingService', ['JsonService', 'DatabaseService', function (JsonService, DatabaseService) {
+	// Fill the empty array with the target and the current position, then save it into the database.
 	this.firstTurn = function (target, current, id) {
 		var empty_array = [
 			["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"],
@@ -780,6 +776,11 @@ simulationApp.service('PathfindingService', ['JsonService', 'DatabaseService', f
 			DatabaseService.special('human', 'update_path', data);
 		}
 	};
+	// Search the target and the current position in the path array, calculate the difference
+	// and decide if x/y must be decrease or increase or nothing, the difference must be bigger or smaller than 1,
+	// otherwise the path will be deleted because it's already in range.
+	// If it's true it will go throw several queries which check if the position is walkable,
+	// if possible it will save this new grid arrays.
 	this.makeTurn = function (human, gui, gui_logic) {
 		var path = angular.fromJson(human['path']);
 		var id = human['id'];
@@ -882,12 +883,14 @@ simulationApp.service('PathfindingService', ['JsonService', 'DatabaseService', f
 		this.deletePath(id);
 		}
 	};
+	// Update the value of the 3 grid Arrays (gui, gui_logik, path)
 	this.saveArray = function (gui, gui_logic, path, id) {
 		JsonService.overwrite('gui', gui);
 		JsonService.overwrite('gui_logic', gui_logic);
 		var data = [id, path];
 		DatabaseService.special('human', 'update_path', data);
 	};
+	// Delete the path from human which id is given.
 	this.deletePath = function (id) {
 		var data = id;
 		DatabaseService.special('human', 'delete_path', data);
