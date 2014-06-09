@@ -639,9 +639,6 @@ simulationApp.service('DefinePathsService', ['DatabaseService', 'JsonService', '
 				gui_logic = data.data;
 			}
 		);
-		// todo: targeting bearbeiten,
-		// die positionen stimmen nicht und es wird wieder direkt das ziel und
-		// nicht ein feld daneben, da das pathfinding eh nicht drauf geht, aber das delete parts muss dann auch geändert werden
 		if (human['path'] == null) {
 			var temp_array = [current_out, current_inner];
 			setTimeout(function (human) {
@@ -799,7 +796,7 @@ simulationApp.service('PathfindingService', ['JsonService', 'DatabaseService', f
 		var difference = [(target[0] - current[0]), (target[1] - current[1])];
 		var x;
 		var y;
-		if (difference[0] > 1 || difference[1] > 1) {
+		if (difference[0] > 1 || difference[1] > 1 || difference[0] < -1 || difference[1] < -1) {
 			if (difference[0] > 0) {
 				x = 1;
 			}
@@ -818,7 +815,6 @@ simulationApp.service('PathfindingService', ['JsonService', 'DatabaseService', f
 			else {
 				y = 0;
 			}
-			console.log(current, x, y, difference);
 			if (gui[current[0] + x][current[1] + y] == 0 && path[current[0] + x][current[1] + y] == 0) {
 				gui[current[0] + x][current[1] + y] = gui[current[0]][current[1]];
 				gui[current[0]][current[1]] = 0;
@@ -883,7 +879,7 @@ simulationApp.service('PathfindingService', ['JsonService', 'DatabaseService', f
 				this.saveArray(gui, gui_logic, path, id);
 			}
 		} else {
-			this.deletePath(id);
+		this.deletePath(id);
 		}
 	};
 	this.saveArray = function (gui, gui_logic, path, id) {

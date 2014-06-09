@@ -76,7 +76,9 @@ simulationApp.controller('RoundController', ['$scope', 'PrepareService', 'Databa
 														angular.forEach(algo, function (value, key) {
 															if (value[0] >= 1 && value[1] >= 1 && value[0] <= 18 && value[1] <= 18) {
 																if (data.data[value[0]][value[1]] == 6) {
-																	PrepareService.prepareGenerateOrder(customer_id);
+																	if (human['order_product_type_id'] == null) {
+																		PrepareService.prepareGenerateOrder(customer_id);
+																	}
 																}
 															}
 														});

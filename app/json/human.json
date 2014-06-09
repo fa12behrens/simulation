@@ -1,1 +1,1 @@
-[{"id":"21","name":"Katarina","gender":"female","path":null,"type":"Customer","order_id":"707","order_product_type_id":"1","ordered":null,"creation_time":null,"product_type_id":null,"ingredients":null,"time_to_cold":null,"price":null,"product_id":null}]
+[{"id":"3","name":"Alice","gender":"female","path":null,"type":"Chef","order_id":null,"order_product_type_id":null,"ordered":null,"creation_time":null,"product_type_id":null,"ingredients":null,"time_to_cold":null,"price":null,"product_id":null}]
