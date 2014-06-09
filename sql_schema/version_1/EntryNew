@@ -1,106 +1,76 @@
--- -----------------------------------------------------
--- Table `simulator`.`human_type`
--- -----------------------------------------------------
-INSERT INTO  `simulator`.`human_type` (
-`id` ,
-`type`
-)
-VALUES (
-NULL ,  'Waiter'
-), (
-NULL ,  'Customer'
-), (
-NULL ,  'Chef'
-), (
-NULL ,  'Storeman'
-);
+-- phpMyAdmin SQL Dump
+-- version 4.0.9
+-- http://www.phpmyadmin.net
+--
+-- Host: 127.0.0.1
+-- Erstellungszeit: 09. Jun 2014 um 22:25
+-- Server Version: 5.5.34
+-- PHP-Version: 5.4.22
 
--- -----------------------------------------------------
--- Table `simulator`.`human`
--- -----------------------------------------------------
-INSERT INTO  `simulator`.`human` (
-`id` ,
-`name` ,
-`gender` ,
-`human_type_id`
-)
-VALUES (
-NULL ,  'Droggelbecher',  'male',  '1'
-), (
-NULL ,  'EvilKenivel',  'male',  '2'
-), (
-NULL ,  'Alice',  'female',  '3'
-), (
-NULL ,  'GandalfBengston',  'male',  '4'
-);
+--
+-- Datenbank: `simulator`
+--
 
--- -----------------------------------------------------
--- Table `simulator`.`product_type`
--- -----------------------------------------------------
-INSERT INTO  `simulator`.`product_type` (
-`id` ,
-`type` ,
-`ingredients` ,
-`time_to_cold` ,
-`price`
-)
-VALUES (
-NULL ,  'Spaghetti',  'nudeln',  '00:10:00',  '10'
-), (
-NULL ,  'Steak',  'fleisch',  '00:05:00',  '15'
-);
+-- --------------------------------------------------------
 
--- -----------------------------------------------------
--- Table `simulator`.`product`
--- -----------------------------------------------------
-INSERT INTO  `simulator`.`product` (
-`id` ,
-`creation_time` ,
-`product_type_id`
-)
-VALUES (
-NULL ,
-CURRENT_TIMESTAMP ,  '1'
-), (
-NULL ,
-CURRENT_TIMESTAMP ,  '2'
-);
+--
+-- Daten für Tabelle `human_type`
+--
 
--- -----------------------------------------------------
--- Table `simulator`.`order`
--- -----------------------------------------------------
-INSERT INTO  `simulator`.`order` (
-`id` ,
-`order_product_type_id` ,
-`ordered`
-)
-VALUES (
-NULL ,  '1', NULL
-), (
-NULL ,  '2', NULL
-);
+INSERT INTO `human_type` (`id`, `type`) VALUES
+	(1, 'Waiter'),
+	(2, 'Customer'),
+	(3, 'Chef'),
+	(4, 'Storeman');
 
--- -----------------------------------------------------
--- Table `simulator`.`human_has_order`
--- -----------------------------------------------------
-INSERT INTO  `simulator`.`human_has_order` (
-`human_id` ,
-`order_id`
-)
-VALUES (
-'2',  '1'
-);
+-- --------------------------------------------------------
 
--- -----------------------------------------------------
--- Table `simulator`.`human_has_product`
--- -----------------------------------------------------
-INSERT INTO  `simulator`.`human_has_product` (
-`human_id` ,
-`product_id`
-)
-VALUES (
-'1',  '1'
-);
+--
+-- Daten für Tabelle `human`
+--
+
+INSERT INTO `human` (`id`, `name`, `gender`, `human_type_id`, `path`) VALUES
+	(1, 'Peter', 'male', 1, NULL),
+	(2, 'Anton', 'male', 2, NULL),
+	(3, 'Alice', 'female', 3, NULL),
+	(12, 'Martin', 'male', 2, NULL),
+	(13, 'Katarina', 'female', 2, NULL),
+	(14, 'Sara', 'female', 2, NULL),
+	(16, 'Christoph', 'male', 2, NULL),
+	(24, 'Leo', 'male', 4, NULL),
+	(25, 'Klaus', 'male', 1, NULL),
+	(26, 'Werner', 'male', 1, NULL),
+	(27, 'Katrin', 'female', 3, NULL),
+	(28, 'Thomas', 'male', 3, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Daten für Tabelle `product_type`
+--
+
+INSERT INTO `product_type` (`id`, `type`, `ingredients`, `time_to_cold`, `price`) VALUES
+	(1, 'Spaghetti', 'nudeln', '00:10:00', 10),
+	(2, 'Steak', 'fleisch', '00:05:00', 15);
+-- --------------------------------------------------------
+
+--
+-- Daten für Tabelle `resource_type`
+--
+
+INSERT INTO `resource_type` (`id`, `type`, `purchase_price`) VALUES
+	(1, 'fleisch', 7),
+	(2, 'nudeln', 1);
 
 
+-- --------------------------------------------------------
 
+--
+-- Daten für Tabelle `resources`
+--
+
+INSERT INTO `resources` (`id`, `durability`, `amount`, `resource_type_id`) VALUES
+	(1, '2014-06-26', 99, 1),
+	(2, '2014-06-19', 99, 2);
+
+-- --------------------------------------------------------
